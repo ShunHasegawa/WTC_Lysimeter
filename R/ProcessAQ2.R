@@ -45,5 +45,7 @@ write.csv(Dec2013, paste("Data//AQ2//ReadyToProcess/", "DilutionCorrected_",
 fils <- dir(path = "Data/AQ2/ReadyToProcess/", pattern = ".csv$")
 aqDat <- cmbn.fls(fils)
 names(aqDat)[5:7] <- c("no", "po", "nh")
+aqDat$depth <- factor(ifelse(aqDat$depth == "S", "shallow", "deep"))
+
 save(aqDat, file = "Output//Data/aq2Data.RData") 
 
