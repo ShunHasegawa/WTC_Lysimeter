@@ -39,3 +39,14 @@ write.csv(Dec2013, paste("Data//AQ2//ReadyToProcess/", "DilutionCorrected_",
                          row.names = TRUE)
 
 
+#################################
+# Process and combine all files #
+#################################
+fils <- dir(path = "Data/AQ2/ReadyToProcess/", pattern = ".csv$")
+aqDat <- cmbn.fls(fils)
+write.csv(aqDat, "Output//Data/aq2Data.RData", row.names = FALSE) 
+
+
+
+
+
