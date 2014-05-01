@@ -60,21 +60,14 @@ shnames <- paste("ChamberMean", c("Nitrate", "Ammonium", "Phosphate", "TotalOrga
 l_ply(1:7, function(x) {
   lnames <- paste(ntrs[x], c("shallow", "deep"), sep = ".") 
   # names of the required data set in the list
+  
   crSheet(sheetname = shnames[x], 
-          datasetS = ChSmmryTbl[[ lnames[1] ]], datasetD = ChSmmryTbl[[ lnames[2] ]])
+          datasetS = ChSmmryTbl[[ lnames[1] ]], 
+          datasetD = ChSmmryTbl[[ lnames[2] ]])
 })
 
 
 
-l_ply(ntrs, function(x) {
-  lp <- grep(x , names(ChSmmryTbl)) # position of a required data set in a list
-  crSheet(sheetname = shnames[x], 
-          datasetS = ChSmmryTbl[[ lp[1] ]], datasetD = ChSmmryTbl[[ lp[2] ]])
-})
-
-
-l_ply(seq(1, 14, 2), function(x) crSheet(sheetname = rep(shnames, each = 2)[x], 
-                                         datasetS = ChSmmryTbl[[x]], datasetD = ChSmmryTbl[[x + 1]]))
 
 # worksheets for temp trt summary
 shnames <- paste("Temp_mean.", c("Nitrification", "N_mineralisation","P_mineralisation"), sep = "")
