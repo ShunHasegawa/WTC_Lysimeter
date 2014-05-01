@@ -52,7 +52,7 @@ Ndf$Sample.Name <- recode(Ndf$Sample.Name, "'8-Oct-13' =  '08-Oct-2013'")
 unique(Ndf$Sample.Name)
 
 # turn Sample.Name into date
-Ndf$date <- as.Date(dmy(Ndf$Sample.Name))
+Ndf$Date <- as.Date(dmy(Ndf$Sample.Name))
 
 ####################################
 # Finalise the shape of data frame #
@@ -66,4 +66,6 @@ Ndf <- cbind(Ndf, a)
 
 # extract required coluns
 names(Ndf)
-tocDF <- Ndf[c("Result.TOC.", "Result.TC.", "Result.IC.", "Result.TN.", "date", "chamber", "depth", "location")]
+tocDF <- Ndf[c("Result.TOC.", "Result.TC.", "Result.IC.", "Result.TN.", "Date", "chamber", "depth", "location")]
+names(tocDF)[1:4] <- c("toc", "tc", "ic", "tn")
+save(tocDF, file = "Output/Data/tocDat.RData")

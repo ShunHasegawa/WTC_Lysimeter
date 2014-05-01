@@ -44,9 +44,6 @@ write.csv(Dec2013, paste("Data//AQ2//ReadyToProcess/", "DilutionCorrected_",
 #################################
 fils <- dir(path = "Data/AQ2/ReadyToProcess/", pattern = ".csv$")
 aqDat <- cmbn.fls(fils)
-write.csv(aqDat, "Output//Data/aq2Data.RData", row.names = FALSE) 
-
-
-
-
+names(aqDat)[5:7] <- c("no", "po", "nh")
+save(aqDat, file = "Output//Data/aq2Data.RData") 
 
