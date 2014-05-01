@@ -1,11 +1,3 @@
-rm(list = ls(all = TRUE))
-
-library(plyr)
-library(lubridate)
-library(reshape)
-
-source("R/functions.R")
-
 #############
 # Correct P #
 #############

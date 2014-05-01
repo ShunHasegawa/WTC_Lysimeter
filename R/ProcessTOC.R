@@ -1,8 +1,5 @@
 rm(list = ls(all = TRUE))
 
-library(car)
-
-
 fls <- dir("Data//TOC", full.names= TRUE)
 
 rowdf <- ldply(fls, function(x) read.table( x, skip = 11, fill = TRUE, sep = "\t", header = TRUE, 
