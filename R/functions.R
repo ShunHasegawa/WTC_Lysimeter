@@ -103,7 +103,7 @@ cmbn.fls <- function(file){
 # Create a summary table #
 ##########################
 CreateTable <- function(dataset, fac){
-  a <- dataset[c("date", fac, "value")] #extract required columns
+  a <- dataset[c("Date", fac, "value")] #extract required columns
   colnames(a) <- c("date","variable","value") #change column names for cast
   means <- cast(a, date~variable, mean, na.rm = TRUE) 
   ses <- cast(a,date~variable,function(x) ci(x,na.rm=TRUE)[4])
@@ -122,7 +122,30 @@ crSheet <- function(sheetname, dataset){
   sheet <- createSheet(wb, sheetName = sheetname)
   
   #add data to the sheet
-  addDataFrame(dataset, sheet, showNA = TRUE, row.names = FALSE, startRow = 2)
+  
+  dataset = ChSmmryTbl[[1]]
+  l_ply(c("shallow", "deep"), function(x) ADFrame(data = dataset, depth = x))
+  
+  # shallow
+  sDat <- subset(dataset, depth == "shallow")
+  addDataFrame("shallow",sheet,row.names=FALSE,col.names=FALSE,startRow=2) # title of the table
+  addDataFrame(sDat, sheet, showNA = TRUE, row.names = FALSE, startRow = 3,
+               characterNA = "NA")
+  
+  # deep
+  dDat <- subset(dataset, depth == "deep")
+  addDataFrame("deep",sheet,row.names=FALSE,col.names=FALSE,startRow=19) # title of the table
+  addDataFrame(dDat, sheet, showNA = TRUE, row.names = FALSE, startRow = 20,
+               characterNA = "NA")
+  
+  ADFrame <- function(data, depth){
+    strw <- ifelse(depth == "shallow", 2, 10) # start row changes according to depth
+    addDataFrame(depth, sheet,row.names=FALSE,col.names=FALSE, startRow = strw) # title of the table
+    addDataFrame(subset(data, depth == depth), sheet, 
+                 showNA = TRUE, row.names = FALSE, startRow = strw + 1,
+                 characterNA = "NA")
+  }
+  
   
   #title of the sheet
   addDataFrame(t(c(sheetname, "unit=mg DrySoil(kg)^(-1) day^(-1)")), sheet, startRow = 1, row.names = FALSE, col.names = FALSE)
