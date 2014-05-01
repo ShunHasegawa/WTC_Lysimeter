@@ -1,5 +1,16 @@
-load("Output/Data/aq2Data.RData")
-load("Output//Data//tocDat.RData")
+###############
+# Process AQ2 #
+###############
+source("R//ProcessAQ2.R")
+
+###############
+# Process TOC #
+###############
+source("R//ProcessTOC.R")
+
+
+# load("Output/Data/aq2Data.RData")
+# load("Output//Data//tocDat.RData")
 
 unique(aqDat$Date) # 2013-03-26
 unique(tocDF$Date) # 2013-03-25
