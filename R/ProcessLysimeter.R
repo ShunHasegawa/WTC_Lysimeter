@@ -56,7 +56,9 @@ lys <- lys[-which(lys$chamber == "12" &
                     lys$Date == as.Date("2013-02-22")),]
 
 lys <- droplevels(lys)
-lys$chamber <- factor(lys$chamber)
+lys$chamber <- factor(ifelse(as.numeric(lys$chamber) < 10, 
+                             paste("0", lys$chamber, sep = ""), 
+                             lys$chamber))
 lys$location <- factor(lys$location)
 # save
 save(lys, file = "Output/Data/WTC_lysimeter.RData")
