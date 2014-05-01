@@ -68,19 +68,6 @@ Ndf <- cbind(Ndf, a)
 names(Ndf)
 tocDF <- Ndf[c("Result.TOC.", "Result.TC.", "Result.IC.", "Result.TN.", "Date", "chamber", "depth", "location")]
 names(tocDF)[1:4] <- c("toc", "tc", "ic", "tn")
+tocDF$depth <- factor(ifelse(tocDF$depth == "S", "shallow", "deep"))
+save(tocDF, file = "Output/Data/tocDat.RData")
 
-##################################################################
-# combien with Feb2013 data which is stored in a different place #
-##################################################################
-prRes <- read.csv("Data/result.csv")
-# I only need feb-2013 data from this dataset
-feb13 <- subset(prRes, date == "15-Feb-13")
-feb13$Date <- as.Date(dmy(feb13$date))
-names(tocDF)
-names(feb13)
-
-# combine
-tocDat <- rbind.fill(tocDF, feb13[names(tocDF)])
-tocDat$depth <- factor(ifelse(tocDat$depth %in% c("S", "shallow"), "shallow", "deep"))
-
-save(tocDat, file = "Output/Data/tocDat.RData")
