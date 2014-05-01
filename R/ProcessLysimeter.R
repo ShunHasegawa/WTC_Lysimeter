@@ -8,6 +8,9 @@ source("R//ProcessAQ2.R")
 ###############
 source("R//ProcessTOC.R")
 
+#######################
+# Merge all data sets #
+#######################
 
 # load("Output/Data/aq2Data.RData")
 # load("Output//Data//tocDat.RData")
@@ -52,5 +55,6 @@ lys <- lys[-which(lys$chamber == "12" &
                     lys$depth == "deep" & 
                     lys$Date == as.Date("2013-02-22")),]
 
+lys <- droplevels(lys)
 # save
 save(lys, file = "Output/Data/WTC_lysimeter.RData")
