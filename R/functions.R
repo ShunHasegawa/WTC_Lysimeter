@@ -61,3 +61,40 @@ Crrtct.ccv.df <- function(filename, ccval = 7.5){
   a <- ldply(1:(length(ccv.ps)-1), function(x) Crrct.ccv(x, data = mrg.res, ccval))
   return(a)
 }
+
+######################################################
+# process and combine aq 2 data, then create a table #
+######################################################
+prcsAQ2 <- function(data){
+  # remove ccv, ccb, standard
+  res <- data[-grep("^C|^STANDARD", as.character(data$Sample.ID)),]
+  
+  # remove dup, top, middle
+  res <- res[-grep("dup$|top|middle", as.character(res$Sample.Details)),]
+  
+  # sample labels
+  a <- strsplit(as.character(res$Sample.Details), "[.]")
+  
+  # turn this into data frame
+  a.df <- ldply(a)
+  names(a.df)[c(3:6)] <- c("Date", "chamber", "depth", "location")
+  a.df$Date <- ymd(a.df$Date)
+  res.df <- cbind(a.df, res)
+  res.df <- res.df[c("Date", "chamber", "depth","location", "Result")]
+  res.df$chamber <- as.numeric(res.df$chamber)
+  res.df$location <- as.numeric(res.df$location)
+  return(res.df)
+}
+
+cmbn.fls <- function(file){
+  # read files
+  rd.fls <- lapply(file, function(x) read.csv(paste("Data/AQ2/ReadyToProcess/", x, sep = ""), header = TRUE))
+  
+  # process and make data frame for each test type
+  pr.df <- ldply(rd.fls, function(x) ddply(x, .(Test.Name), prcsAQ2))
+  
+  # reshape
+  names(pr.df)[grep("Result", names(pr.df))] <- "value"
+  pr.cst <- cast(pr.df, Date + chamber + location + depth ~ Test.Name)
+  return(pr.cst)
+}
