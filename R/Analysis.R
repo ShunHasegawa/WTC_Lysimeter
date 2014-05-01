@@ -56,12 +56,12 @@ sheet <- createSheet(wb,sheetName="row_data")
 addDataFrame(lys, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
 
 # worksheets for chamber summary
-shnames <- paste("ChamberMean", c("Nitrate", "Ammonium", "Phosphate", "TotalOrganicC", "TotalC", "InorganicC", "TotalN"), sep = "_")
-
+vars <- c("Nitrate", "Ammonium", "Phosphate", "TotalOrganicC", "TotalC", "InorganicC", "TotalN")
+shnames <- paste("ChamberMean", vars, sep = "_")
 MltcrSheet(tbl = ChSmmryTbl, shnames = shnames, ntrs = ntrs)
 
 # worksheets for temp trt summary
-shnames <- paste("Temp_mean.", c("Nitrate", "Ammonium", "Phosphate", "TotalOrganicC", "TotalC", "InorganicC", "TotalN"), sep = "_")
+shnames <- paste("Temp_mean.", vars, sep = "_")
 MltcrSheet(tbl = TrtSmmryTbl, shnames = shnames, ntrs = ntrs)
 
 # save file
