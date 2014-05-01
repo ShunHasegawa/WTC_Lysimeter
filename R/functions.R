@@ -132,12 +132,33 @@ crSheet <- function(sheetname, datasetS, datasetD){
   addDataFrame("deep",sheet,row.names=FALSE,col.names=FALSE,startRow=19) # title of the table
   addDataFrame(datasetD, sheet, showNA = TRUE, row.names = FALSE, startRow = 20,
                characterNA = "NA")
-  }
-  
   
   #title of the sheet
-  addDataFrame(t(c(sheetname, "unit=mg DrySoil(kg)^(-1) day^(-1)")), sheet, startRow = 1, row.names = FALSE, col.names = FALSE)
+  addDataFrame(t(c(sheetname, "unit=ppm")), sheet, startRow = 1, row.names = FALSE, col.names = FALSE)
 }
+
+
+###############################
+# Created multiple worksheets #
+###############################
+# extract required data set from a list of summary tables
+# and put them in excel worksheets
+# the same nutrient but different layers will be placed 
+# in the same
+# worksheet
+
+MltcrSheet <- function(tbl, shnames, ntrs){
+  l_ply(1:length(shnames), function(x) {
+    lnames <- paste(ntrs[x], c("shallow", "deep"), sep = ".") 
+    # names of the required data set in the list
+    
+    crSheet(sheetname = shnames[x], 
+            datasetS = tbl[[ lnames[1] ]], 
+            datasetD = tbl[[ lnames[2] ]])
+  })
+}
+
+
 
 ############################
 # make a summary dataframe #
