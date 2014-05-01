@@ -103,15 +103,20 @@ cmbn.fls <- function(file){
 # Create a summary table #
 ##########################
 CreateTable <- function(dataset, fac){
-  a <- dataset[c("Date", fac, "value")] #extract required columns
-  colnames(a) <- c("date","variable","value") #change column names for cast
-  means <- cast(a, date~variable, mean, na.rm = TRUE) 
-  ses <- cast(a,date~variable,function(x) ci(x,na.rm=TRUE)[4])
-  colnames(ses)[2:ncol(ses)] <- paste(colnames(ses)[2:ncol(ses)],"SE",sep=".")
-  samples <- cast(a,date~variable,function(x) sum(!is.na(x))) #sample size
-  colnames(samples)[2:ncol(samples)] <- paste(colnames(samples)[2:ncol(samples)],"N",sep=".")
-  mer <- Reduce(function(...) merge(..., by = "date"), list(means, ses, samples)) #merge datasets
-  mer <- mer[,c(1, order(names(mer)[-grep("date|N", names(mer))])+1, grep("N", names(mer)))] #re-order columns
+  
+  a <- dataset[c("Date", "depth", fac, "value")] #extract required columns
+  colnames(a) <- c("date", "depth", "variable","value") #change column names for cast
+  
+  means <- cast(a, date + depth ~variable, mean, na.rm = TRUE) 
+  
+  ses <- cast(a,date + depth ~ variable,function(x) ci(x,na.rm=TRUE)[4])
+  colnames(ses)[3:ncol(ses)] <- paste(colnames(ses)[3:ncol(ses)],"SE",sep=".")
+  
+  samples <- cast(a,date + depth ~ variable,function(x) sum(!is.na(x))) #sample size
+  colnames(samples)[3:ncol(samples)] <- paste(colnames(samples)[3:ncol(samples)],"N",sep=".")
+  
+  mer <- Reduce(function(...) merge(..., by = c("date", "depth")), list(means, ses, samples)) #merge datasets
+  mer <- mer[,c(1, 2, order(names(mer)[-grep("date|depth|N", names(mer))]) + 2, grep("N", names(mer)))] #re-order columns
   mer$date <- as.character(mer$date) # date is turned into character for knitr output 
   return(mer)
 }
