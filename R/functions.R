@@ -117,33 +117,21 @@ CreateTable <- function(dataset, fac){
 }
 
 #function which creates excel worksheets
-crSheet <- function(sheetname, dataset){
+crSheet <- function(sheetname, datasetS, datasetD){
   #create sheet
   sheet <- createSheet(wb, sheetName = sheetname)
   
   #add data to the sheet
   
-  dataset = ChSmmryTbl[[1]]
-  l_ply(c("shallow", "deep"), function(x) ADFrame(data = dataset, depth = x))
-  
   # shallow
-  sDat <- subset(dataset, depth == "shallow")
   addDataFrame("shallow",sheet,row.names=FALSE,col.names=FALSE,startRow=2) # title of the table
-  addDataFrame(sDat, sheet, showNA = TRUE, row.names = FALSE, startRow = 3,
+  addDataFrame(datasetS, sheet, showNA = TRUE, row.names = FALSE, startRow = 3,
                characterNA = "NA")
   
   # deep
-  dDat <- subset(dataset, depth == "deep")
   addDataFrame("deep",sheet,row.names=FALSE,col.names=FALSE,startRow=19) # title of the table
-  addDataFrame(dDat, sheet, showNA = TRUE, row.names = FALSE, startRow = 20,
+  addDataFrame(datasetD, sheet, showNA = TRUE, row.names = FALSE, startRow = 20,
                characterNA = "NA")
-  
-  ADFrame <- function(data, depth){
-    strw <- ifelse(depth == "shallow", 2, 10) # start row changes according to depth
-    addDataFrame(depth, sheet,row.names=FALSE,col.names=FALSE, startRow = strw) # title of the table
-    addDataFrame(subset(data, depth == depth), sheet, 
-                 showNA = TRUE, row.names = FALSE, startRow = strw + 1,
-                 characterNA = "NA")
   }
   
   
