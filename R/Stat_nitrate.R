@@ -1,7 +1,6 @@
-
-###############
-### Shallow ###
-###############
+###########
+# Shallow #
+###########
 range(lys$no[lys$depth == "shallow"])
 
 bxplts(value = "no", data = subset(lys, depth == "shallow"))
@@ -43,27 +42,27 @@ plot(Fml)
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-# most of the masurements on a line but not very good...
+  # most of the masurements on a line but not very good...
 
-###########
-## Deep ###
-###########
+########
+# Deep #
+########
 
 range(lys$no[lys$depth == "deep"])
 
 bxplts(value = "no", data = subset(lys, depth == "deep"))
-# log seems slightly better
+  # log seems slightly better
 
 # different random factor structure
 m1 <- lme(log(no) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
 m2 <- lme(log(no) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = lys)
 m3 <- lme(log(no) ~ temp * time, random = ~1|id, subset = depth == "deep", data = lys)
 anova(m1, m2, m3)
-# m1 is better
+  # m1 is better
 
 # autocorrelation
 atcr.cmpr(m1, rndmFac= "chamber/location")
-# model4 is best
+  # model4 is best
 
 atml <- atcr.cmpr(m1, rndmFac= "chamber/location")[[4]]
 
@@ -71,7 +70,7 @@ Anova(atml)
 
 # model simplification
 MdlSmpl(atml)
-# interaction of temp x time and temp are removable
+  # interaction of temp x time and temp are removable
 
 Fml <- MdlSmpl(atml)$model.reml
 
@@ -90,4 +89,4 @@ plot(Fml)
 qqnorm(Fml, ~ resid(.)|chamber)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-# not very good
+  # not very good
