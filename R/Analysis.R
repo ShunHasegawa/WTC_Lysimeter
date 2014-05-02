@@ -45,3 +45,7 @@ lys$depth <- factor(lys$depth, levels = c("shallow", "deep"))
 #################
 source("R//SummaryExlTable.R")
 
+########
+# Figs #
+########
+source("R//Figs.R")
