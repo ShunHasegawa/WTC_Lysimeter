@@ -31,6 +31,10 @@ l_ply(1:7, function(x) ggsavePP(filename = fls[x], plot = TrtFg[[x]], width = 6,
 ###################################
 ## plot all nutrients separately ##
 ###################################
+p <- PltTempMean(TrtMean) + 
+  facet_wrap( ~variable, ncol = 2, scale = "free_y")
+
+# modify labels
 ylabs <- c(expression(NO[3]^"-"-N),
            expression(NH[4]^"+"-N),
            expression(PO[4]^"3-"-P),
@@ -39,10 +43,8 @@ ylabs <- c(expression(NO[3]^"-"-N),
            expression(IC),
            expression(TN))
 
-p <- PltTempMean(TrtMean) + 
-  facet_wrap( ~variable, ncol = 2, scale = "free_y")
-
-# modify labels
 pl <- facet_wrap_labeller(p, labels = ylabs)
+
+
 ggsavePP(filename = "Output/Figs/WTC_LysimeterTemp", plot = pl, width = 8, height = 8)
 
