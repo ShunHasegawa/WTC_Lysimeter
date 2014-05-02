@@ -57,27 +57,33 @@ bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep"))
 bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep" & nh > min(nh)))
   # improved a lot; log looks better
 
+NHRmOl <- subset(lys, nh > min(nh))
+
 # different random factor structure
-m1 <- lme(log(nh + .00271) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
-m2 <- lme(log(nh + .00271) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = lys)
-m3 <- lme(log(nh + .00271) ~ temp * time, random = ~1|id, subset = depth == "deep", data = lys)
+m1 <- lme(log(nh + .00271) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = NHRmOl)
+m2 <- lme(log(nh + .00271) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = NHRmOl)
+m3 <- lme(log(nh + .00271) ~ temp * time, random = ~1|id, subset = depth == "deep", data = NHRmOl)
 anova(m1, m2, m3)
   # m3 is slightly better
 
 # autocorrelation
 atcr.cmpr(m3, rndmFac= "id")
-  # no need for autocorrelation
+  # model4 looks better
 
-Anova(m3)
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+
+Anova(atml)
 
 # model simplification
-MdlSmpl(m3)
+MdlSmpl(atml)
   # interaction of temp x time and temp are removable
 
-Fml <- MdlSmpl(m3)$model.reml
+Fml <- MdlSmpl(atml)$model.reml
 
 # The final model is:
-lme(log(nh + .00271) ~ time, random = ~1|id, subset = depth == "deep", data = lys)
+lme(log(nh + .00271) ~ time, random = ~1|id, 
+    correlation=corAR1(),
+    subset = depth == "deep", data = NHRmOl)
 
 Anova(Fml)
 
@@ -90,4 +96,4 @@ plot(Fml)
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-  # there are few weird ones....
+  # not great..
