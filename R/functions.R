@@ -170,7 +170,8 @@ Crt_SmryDF <- function(data, val = "value"){
 ####################
 # plot mean and se #
 ####################
-PltMean <- function(data){
+# general setting
+PltMean <- function(data, colfactor){
   
   # change factor level names for labelling
   data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
@@ -191,19 +192,40 @@ PltMean <- function(data){
     if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i]
   }
   
-  p <- ggplot(data, aes_string(x = "Date", y = "Mean", col = "chamber"))
+  p <- ggplot(data, aes_string(x = "Date", y = "Mean", col = colfactor))
   
   p2 <- p + geom_line(size = 1) +
-    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = "chamber") , width = 5) + 
-    labs(x = "Time", y = ylab) +
+    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor) , width = 5) + 
+    labs(x = "Time", y = ylab)
+  return(p2)
+}
+
+#####################
+# Plot Chamber mean #
+#####################
+PltChMean <- function(data){
+  # change factor level names for labelling
+  p <- PltMean(data, colfactor = "chamber") +
     scale_color_manual(values = palette(), "Chamber", 
                        labels = paste("Ch", c(1:12), sep = "_")) +
     scale_linetype_manual(values = rep(c("solid", "dashed"), 6), 
                           "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
     facet_grid(depth~. )
-  
-  p2
+  return(p)
 }
+
+######################
+# Plot temp trt mean #
+######################
+PltTempMean <- function(data){
+  p <- PltMean(data, colfactor = "temp") +
+    scale_color_manual(values = c("blue", "red"), "Temp trt", 
+                       labels = c("Ambient", "eTemp")) +
+      facet_grid(depth~. )
+  return(p)
+}
+
+
 
 ##############################
 # Save ggplot in PDF and PNG #
