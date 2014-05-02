@@ -170,12 +170,12 @@ Crt_SmryDF <- function(data, val = "value"){
 ####################
 # plot mean and se #
 ####################
-# general setting
-PltMean <- function(data, colfactor){
+# general settings
+PltMean <- function(data, ...){
   
-  # change factor level names for labelling
+  # change factor level names for labelling on figs
   data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
-    
+  data$temp <-  factor(data$temp, levels = c("amb", "elev"), labels = c("Ambient", "eTemp"))
   
   ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
              expression(NH[4]^"+"-N~(mg~l^-1)),
@@ -192,10 +192,10 @@ PltMean <- function(data, colfactor){
     if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i]
   }
   
-  p <- ggplot(data, aes_string(x = "Date", y = "Mean", col = colfactor))
+  p <- ggplot(data, aes_string(x = "Date", y = "Mean", ...))
   
   p2 <- p + geom_line(size = 1) +
-    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor) , width = 5) + 
+    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", ...) , width = 5) + 
     labs(x = "Time", y = ylab)
   return(p2)
 }
@@ -205,7 +205,7 @@ PltMean <- function(data, colfactor){
 #####################
 PltChMean <- function(data){
   # change factor level names for labelling
-  p <- PltMean(data, colfactor = "chamber") +
+  p <- PltMean(data, col = "chamber") +
     scale_color_manual(values = palette(), "Chamber", 
                        labels = paste("Ch", c(1:12), sep = "_")) +
     scale_linetype_manual(values = rep(c("solid", "dashed"), 6), 
@@ -218,10 +218,9 @@ PltChMean <- function(data){
 # Plot temp trt mean #
 ######################
 PltTempMean <- function(data){
-  p <- PltMean(data, colfactor = "temp") +
-    scale_color_manual(values = c("blue", "red"), "Temp trt", 
-                       labels = c("Ambient", "eTemp")) +
-      facet_grid(depth~. )
+  p <- PltMean(data, col = "temp", linetype = "depth") +
+    scale_color_manual(values = c("blue", "red"), "Temp trt") +
+    scale_linetype_manual(values = c("solid", "dashed"), "Depth")
   return(p)
 }
 
