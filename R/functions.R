@@ -269,3 +269,52 @@ ggsavePP <- function(filename, plot, width, height){
          dpi = 600)
 }
 
+#######################
+#model simplification #
+#######################
+MdlSmpl <- function(model){
+  mod2 <- update(model, method = "ML") #change method from REML to ML
+  stai <- stepAIC(mod2, trace = FALSE) #model simplification by AIC
+  dr <- drop1(stai, test="Chisq") #test if removing a factor even more significantly lowers model
+  model <- update(stai, method="REML")
+  ifelse(all(dr[[4]] < 0.05, na.rm=TRUE), anr <- anova(model), anr<-NA) 
+  #dr[[4]]<0.05-->unable to remove any more factors so finlize the results by changsing the method back to REML
+  return(list(step.aic = stai$anova, drop1 = dr, anova.reml = anr, model.reml = model, model.ml = stai))
+}
+
+#############################################
+# compare different auto-correlation models #
+#############################################
+atcr.cmpr <- function(model, rndmFac){
+  if(rndmFac == "chamber/side"){
+    model2 <- update(model,corr=corCompSymm(form=~1|chamber/side)) 
+  } else {
+    if(rndmFac == "chamber"){
+      model2 <- update(model,corr=corCompSymm(form=~1|chamber))
+    } else {
+      model2 <- update(model,corr=corCompSymm(form=~1|id))
+    }
+  }
+  
+  model3 <- update(model,correlation=corARMA(q=2))
+  model4 <- update(model,correlation=corAR1()) 
+  model5 <- update(model,correlation=corARMA(q=1))
+  a <- anova(model,model2,model3,model4,model5)
+  models <- list(model, model2, model3, model4, model5, a)
+  return(models)
+}
+
+###########################################
+# produce box plots with transformed data #
+###########################################
+# log OR sqrt OR power(1/3)
+bxplts <- function(value, ofst = 0, data){
+  par(mfrow = c(2,2))
+  y <- data[[value]] + ofst #ofst is added to make y >0
+  boxplot(y ~ temp*time, data)
+  boxplot(log(y) ~ temp*time, main = "log", data)
+  boxplot(sqrt(y) ~ temp*time, main = "sqrt", data)
+  boxplot(y^(1/3) ~ temp*time, main = "power(1/3)", data)
+  par(mfrow = c(1,1))
+}
+
