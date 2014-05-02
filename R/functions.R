@@ -286,7 +286,7 @@ MdlSmpl <- function(model){
 # compare different auto-correlation models #
 #############################################
 atcr.cmpr <- function(model, rndmFac){
-  if(rndmFac == "chamber/side"){
+  if(rndmFac == "chamber/location"){
     model2 <- update(model,corr=corCompSymm(form=~1|chamber/location)) 
   } else {
     if(rndmFac == "chamber"){
