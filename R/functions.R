@@ -176,15 +176,10 @@ PltMean <- function(data, ...){
   # change factor level names for labelling on figs
   data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
   data$temp <-  factor(data$temp, levels = c("amb", "elev"), labels = c("Ambient", "eTemp"))
-  data$variable <- factor(data$variable, levels = c("no", "nh", "po", "toc", "tc", "ic", "tn"),
-                          labels = c(expression(NO[3]^"-"-N), 
-                                     expression(NH[4]^"+"-N),
-                                     expression(PO[4]^"3-"-N),
-                                     "TOC", "TC", "IC", "TN"))
-  
+    
   ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
              expression(NH[4]^"+"-N~(mg~l^-1)),
-             expression(PO[4]^"3-"-N~(mg~l^-1)),
+             expression(PO[4]^"3-"-P~(mg~l^-1)),
              expression(TOC~(mg~l^-1)),
              expression(TC~(mg~l^-1)),
              expression(IC~(mg~l^-1)),
@@ -234,6 +229,28 @@ PltTempMean <- function(data){
   return(p)
 }
 
+
+#################################
+# labells for facet_wrap graphs #
+#################################
+facet_wrap_labeller <- function(gg.plot,labels=NULL) {
+  #works with R 3.0.1 and ggplot2 0.9.3.1
+  require(gridExtra)
+  
+  g <- ggplotGrob(gg.plot)
+  gg <- g$grobs      
+  strips <- grep("strip_t", names(gg))
+  
+  for(ii in seq_along(labels))  {
+    modgrob <- getGrob(gg[[strips[ii]]], "strip.text", 
+                       grep=TRUE, global=TRUE)
+    gg[[strips[ii]]]$children[[modgrob$name]] <- editGrob(modgrob,label=labels[ii])
+  }
+  
+  g$grobs <- gg
+  class(g) = c("arrange", "ggplot",class(g)) 
+  g
+}
 
 ##############################
 # Save ggplot in PDF and PNG #
