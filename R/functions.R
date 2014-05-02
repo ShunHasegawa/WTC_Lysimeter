@@ -195,8 +195,7 @@ PltMean <- function(data, ...){
       if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i]
     }
   }
-  
-  
+    
   p <- ggplot(data, aes_string(x = "Date", y = "Mean", ...))
   
   p2 <- p + geom_line(size = 1) +
@@ -235,7 +234,9 @@ PltTempMean <- function(data){
 #################################
 facet_wrap_labeller <- function(gg.plot,labels=NULL) {
   #works with R 3.0.1 and ggplot2 0.9.3.1
-  require(gridExtra)
+  # copied from http://stackoverflow.com/questions/19282897/
+  # how-to-add-expressions-to-labels-in-facet-wrap
+  # require(gridExtra)
   
   g <- ggplotGrob(gg.plot)
   gg <- g$grobs      
