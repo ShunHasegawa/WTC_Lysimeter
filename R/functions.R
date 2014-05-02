@@ -137,15 +137,13 @@ crSheet <- function(sheetname, datasetS, datasetD){
   addDataFrame(t(c(sheetname, "unit=ppm")), sheet, startRow = 1, row.names = FALSE, col.names = FALSE)
 }
 
-
 ###############################
 # Created multiple worksheets #
 ###############################
 # extract required data set from a list of summary tables
 # and put them in excel worksheets
 # the same nutrient but different layers will be placed 
-# in the same
-# worksheet
+# in the same worksheet
 
 MltcrSheet <- function(tbl, shnames, ntrs){
   l_ply(1:length(shnames), function(x) {
@@ -158,8 +156,6 @@ MltcrSheet <- function(tbl, shnames, ntrs){
   })
 }
 
-
-
 ############################
 # make a summary dataframe #
 ############################
@@ -171,3 +167,45 @@ Crt_SmryDF <- function(data, val = "value"){
   data.frame(Mean, SE, N)
 }
 
+####################
+# plot mean and se #
+####################
+data = subset(ChMean, variable == "no")
+
+PltMean <- function(data){
+  vars <- c("",
+            substitute(NO[3]^"-"-N), 
+            substitute(NH[4]^"+"-N),
+            substitute(PO[4]^"3-"-P),
+            "TOC", "TC", "IC", "TN")
+  
+  # subsitute returens argument as it is without calculation (similar to expression())
+  
+  ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
+             expression(NH[4]^"+"-N~(mg~l^-1)),
+             expression(PO[4]^"3-"-N~(mg~l^-1)),
+             expression(TOC~(mg~l^-1)),
+             expression(TC~(mg~l^-1)),
+             expression(IC~(mg~l^-1)),
+             expression(TN~(mg~l^-1)))
+  
+  # create ylab according to variable
+  ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
+  
+  for (i in 1:7){
+    if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i]
+  }
+  
+  p <- ggplot(data, aes_string(x = "Date", y = "Mean", col = "black"))
+  
+  p2 <- p + geom_line(size = 1) + 
+    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = palette()), width = 5) + 
+    labs(x = "Time", y = ylab) +
+    scale_color_manual(values = palette(), "Chamber", 
+                       labels = paste("Ch", c(1:12), sep = "_")) +
+    scale_linetype_manual(values = rep(c("solid", "dashed"), 6), 
+                          "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
+    facet_grid(depth~. )
+  
+  p2
+}
