@@ -176,6 +176,11 @@ PltMean <- function(data, ...){
   # change factor level names for labelling on figs
   data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
   data$temp <-  factor(data$temp, levels = c("amb", "elev"), labels = c("Ambient", "eTemp"))
+  data$variable <- factor(data$variable, levels = c("no", "nh", "po", "toc", "tc", "ic", "tn"),
+                          labels = c(expression(NO[3]^"-"-N), 
+                                     expression(NH[4]^"+"-N),
+                                     expression(PO[4]^"3-"-N),
+                                     "TOC", "TC", "IC", "TN"))
   
   ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
              expression(NH[4]^"+"-N~(mg~l^-1)),
