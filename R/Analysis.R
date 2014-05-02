@@ -23,7 +23,8 @@ source("R//functions.R")
 load("Output/Data/WTC_lysimeter.RData")
 
 # time
-lys$time <- as.numeric(factor(lys$Date)) # make sure Date is date format!!
+lys$time <- as.numeric(factor(lys$Date)) 
+  # make sure Date is in Date format!!
 
 # temp
 lys$temp <- factor(ifelse(as.numeric(as.character(lys$chamber)) %in% seq(2, 12, 2), "elev", "amb"))
@@ -32,6 +33,12 @@ lys$temp <- factor(ifelse(as.numeric(as.character(lys$chamber)) %in% seq(2, 12, 
 ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
 
 lys <- lys[apply(lys[,ntrs], 1, function(x) !all(is.na(x))), ]
+
+
+# reorder depth factor
+levels(lys$depth)
+lys$depth <- factor(lys$depth, levels = c("shallow", "deep"))
+
 
 #################
 # Summary table #
