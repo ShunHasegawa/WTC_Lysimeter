@@ -170,16 +170,11 @@ Crt_SmryDF <- function(data, val = "value"){
 ####################
 # plot mean and se #
 ####################
-data = subset(ChMean, variable == "no")
-
 PltMean <- function(data){
-  vars <- c("",
-            substitute(NO[3]^"-"-N), 
-            substitute(NH[4]^"+"-N),
-            substitute(PO[4]^"3-"-P),
-            "TOC", "TC", "IC", "TN")
   
-  # subsitute returens argument as it is without calculation (similar to expression())
+  # change factor level names for labelling
+  data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
+    
   
   ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
              expression(NH[4]^"+"-N~(mg~l^-1)),
@@ -196,10 +191,10 @@ PltMean <- function(data){
     if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i]
   }
   
-  p <- ggplot(data, aes_string(x = "Date", y = "Mean", col = "black"))
+  p <- ggplot(data, aes_string(x = "Date", y = "Mean", col = "chamber"))
   
-  p2 <- p + geom_line(size = 1) + 
-    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = palette()), width = 5) + 
+  p2 <- p + geom_line(size = 1) +
+    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = "chamber") , width = 5) + 
     labs(x = "Time", y = ylab) +
     scale_color_manual(values = palette(), "Chamber", 
                        labels = paste("Ch", c(1:12), sep = "_")) +
@@ -209,3 +204,20 @@ PltMean <- function(data){
   
   p2
 }
+
+##############################
+# Save ggplot in PDF and PNG #
+##############################
+ggsavePP <- function(filename, plot, width, height){
+  ggsave(filename = paste(filename, ".pdf", sep = ""), 
+         plot = plot, 
+         width = width, 
+         height = height)
+  
+  ggsave(filename = paste(filename, ".png", sep = ""), 
+         plot = plot, 
+         width = width, 
+         height = height, 
+         dpi = 600)
+}
+
