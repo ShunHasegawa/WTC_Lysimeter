@@ -1,4 +1,4 @@
-lysMlt <- melt(lys, id = c("time", "Date", "temp", "chamber", "location", "depth"), na.rm = TRUE)
+lysMlt <- melt(lys, id = c("time", "Date", "temp", "chamber", "location", "depth", "id"), na.rm = TRUE)
 lysMlt$variable <- factor(lysMlt$variable, levels = c(ntrs)) # change the level order of variable 
 
 # chamber summary table & mean
