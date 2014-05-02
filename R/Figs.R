@@ -15,10 +15,15 @@ theme_set(theme_bw())
 vars <- c("Nitrate", "Ammoinum", "Phosphate", "TOC", "TC", "IC", "TN")
 
 # Chamber
-ChFg <- dlply(ChMean, .(variable), PltMean)
-fls <- paste("Output//Figs/WTC_Lysimeterchamber_", vars, sep = "")
+ChFg <- dlply(ChMean, .(variable), PltChMean)
+fls <- paste("Output//Figs/WTC_LysimeterChamber_", vars, sep = "")
 
 # save as pdf and png
 l_ply(1:7, function(x) ggsavePP(filename = fls[x], plot = ChFg[[x]], width = 6, height = 6))
 
 # Temp trt
+TrtFg <- dlply(TrtMean, .(variable), PltTempMean)
+fls <- paste("Output//Figs/WTC_LysimeterTempTrt_", vars, sep = "")
+
+# save as pdf and png
+l_ply(1:7, function(x) ggsavePP(filename = fls[x], plot = TrtFg[[x]], width = 6, height = 6))
