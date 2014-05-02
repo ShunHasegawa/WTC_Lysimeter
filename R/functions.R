@@ -177,8 +177,7 @@ PltMean <- function(data, ...){
   data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
   data$temp <-  factor(data$temp, levels = c("amb", "elev"), labels = c("Ambient", "eTemp"))
   
-  ylabs <- c(expression((mg~l^-1)),
-             expression(NO[3]^"-"-N~(mg~l^-1)),
+  ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
              expression(NH[4]^"+"-N~(mg~l^-1)),
              expression(PO[4]^"3-"-N~(mg~l^-1)),
              expression(TOC~(mg~l^-1)),
@@ -189,11 +188,14 @@ PltMean <- function(data, ...){
   # create ylab according to variable
   ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
   
-  
-  if(length(unique(data$variable)) > 1) ylab <- ylabs[1] else 
-  for (i in 1:7){
-    if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i+1]
+  # when plotting multiple variables at the same time
+  if(length(unique(data$variable)) > 1) ylab <- expression((mg~l^-1)) else {
+    # only one variable
+    for (i in 1:7){
+      if(unique(data$variable) == ntrs[i]) ylab  <- ylabs[i]
+    }
   }
+  
   
   p <- ggplot(data, aes_string(x = "Date", y = "Mean", ...))
   
