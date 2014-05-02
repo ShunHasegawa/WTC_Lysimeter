@@ -287,7 +287,7 @@ MdlSmpl <- function(model){
 #############################################
 atcr.cmpr <- function(model, rndmFac){
   if(rndmFac == "chamber/side"){
-    model2 <- update(model,corr=corCompSymm(form=~1|chamber/side)) 
+    model2 <- update(model,corr=corCompSymm(form=~1|chamber/location)) 
   } else {
     if(rndmFac == "chamber"){
       model2 <- update(model,corr=corCompSymm(form=~1|chamber))
