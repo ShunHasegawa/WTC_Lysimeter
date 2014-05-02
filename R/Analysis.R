@@ -24,11 +24,14 @@ source("R//functions.R")
 load("Output/Data/WTC_lysimeter.RData")
 
 # time
-lys$time <- as.numeric(factor(lys$Date)) 
+lys$time <- factor(as.numeric(factor(lys$Date)))
   # make sure Date is in Date format!!
 
 # temp
 lys$temp <- factor(ifelse(as.numeric(as.character(lys$chamber)) %in% seq(2, 12, 2), "elev", "amb"))
+
+# id
+lys$id <- lys$chamber:lys$location
 
 # remove non-informative rows (rows with all na for nutrient vaeiables)
 ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
