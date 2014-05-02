@@ -26,7 +26,7 @@ TrtFg <- dlply(TrtMean, .(variable), PltTempMean)
 fls <- paste("Output//Figs/WTC_LysimeterTempTrt_", vars, sep = "")
 
 # save as pdf and png
-l_ply(1:7, function(x) ggsavePP(filename = fls[x], plot = TrtFg[[x]], width = 6, height = 6))
+l_ply(1:7, function(x) ggsavePP(filename = fls[x], plot = TrtFg[[x]], width = 6, height = 3))
 
 ###################################
 ## plot all nutrients separately ##
