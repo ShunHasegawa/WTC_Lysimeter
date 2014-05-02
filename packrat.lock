@@ -53,6 +53,10 @@ Source: CRAN
 Version: 2.15.4.1
 Requires: MASS, gdata
 
+Package: gridExtra
+Source: CRAN
+Version: 0.9.1
+
 Package: gtable
 Source: CRAN
 Version: 0.1.2
