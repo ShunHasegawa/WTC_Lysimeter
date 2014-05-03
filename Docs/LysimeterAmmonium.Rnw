@@ -1,0 +1,119 @@
+\Sexpr{set_parent('WTC_Lysimeter_report.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Ammonium}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_LysimeterAmmonium}
+
+\begin{center}
+
+<<FigTempAmmonium, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[2]]
+@
+
+\caption{Ammonium in soil water at temperature treatments}
+\end{center}
+\end{figure}
+
+<<TableTempAmmonium, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[["nh.shallow"]],
+             caption = "Temp trt mean of ammonium in soil water at a shallow layer", 
+             label = "table:tempLysAmmoniumS",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+print(xtable(TrtSmmryTbl[["nh.deep"]],
+             caption = "Temp trt mean of ammonium in soil water at a deep layer", 
+             label = "table:tempLysAmmoniumD",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\clearpage
+
+\paragraph{Stats}
+
+%% Shallow %%
+\paragraph{Shallow}
+\noindent
+
+<<StatTempAmmoniumS, echo=TRUE, results='markup'>>=
+
+@
+
+
+%%% Chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:Ch_LysimeterAmmonium}
+
+\begin{center}
+
+<<FigChAmmonium, echo=FALSE, fig.height=6, fig.width=6>>=
+ChFg[[2]]
+@
+
+\caption{Ammonium in soil water in each chamber}
+\end{center}
+\end{figure}
+
+<<TableChAmmonium, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[["nh.shallow"]][, 1:13],
+             caption = "Chamber means for ammonium in 
+             soil water at a shallow layer",
+             label = "table:chamber_LysAmmoniumS",
+             NA.string = "NA",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["nh.shallow"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["nh.shallow"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+
+print(xtable(ChSmmryTbl[["nh.deep"]][, 1:13],
+             caption = "Chamber means for ammonium in 
+             soil water at a deep layer",
+             label = "table:chamber_LysAmmoniumD",
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["nh.deep"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["nh.deep"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@
