@@ -36,24 +36,24 @@ plot(m1)
 # Deep #
 ########
 range(lys$ic[lys$depth == "deep"], na.rm = TRUE)
-bxplts(value = "ic", data = subset(lys, depth == "deep"))
-# log looks better
+bxplts(value = "ic", ofst=.01 ,data = subset(lys, depth == "deep"))
+  # log looks better
 
 # different random factor structure
-m1 <- lme(log(ic) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
-          data = lys, na.action = "na.omit")
-m2 <- lme(log(ic) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
-          data = lys, na.action = "na.omit")
-m3 <- lme(log(ic) ~ temp * time, random = ~1|id, subset = depth == "deep", 
-          data = lys, na.action = "na.omit")
+m1 <- lme(log(ic+.1) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
+          data = lys, na.action = "na.omit", method = "ML")
+m2 <- lme(log(ic+.1) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
+          data = lys, na.action = "na.omit", method = "ML")
+m3 <- lme(log(ic+.1) ~ temp * time, random = ~1|id, subset = depth == "deep", 
+          data = lys, na.action = "na.omit", method = "ML")
 anova(m1, m2, m3)
-# m3 is slightly better
+  # m3 is slightly better
 
 # auicorrelation
-aicr.cmpr(m3, rndmFac= "id")
+atcr.cmpr(m3, rndmFac= "id")
 # model4 is best
-
-atml <- aicr.cmpr(m3, rndmFac= "id")[[4]]
+  
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
 # model simplification
 Anova(atml)
@@ -63,7 +63,7 @@ MdlSmpl(atml)
 Fml <- MdlSmpl(atml)$model.reml
 
 # the final model is:
-lme(log(ic) ~ time, random = ~1|id, 
+lme(log(ic + .1) ~ time, random = ~1|id, 
     correlation=corAR1(),
     subset = depth == "deep", 
     data = lys, na.action = "na.omit")
@@ -79,3 +79,4 @@ plot(Fml)
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
+  # this result is not reliable....
