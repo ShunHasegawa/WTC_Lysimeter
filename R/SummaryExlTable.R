@@ -1,6 +1,19 @@
 ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
 
-lysMlt <- melt(lys, id = c("time", "Date", "temp", "chamber", "location", "depth", "id"), na.rm = TRUE)
+# remove outlier
+LysRmOl <- lys
+
+# tc:shallow:0
+LysRmOl[which(LysRmOl$depth == "shallow" & LysRmOl$tc == 0), "tc"] <- NA
+
+# toc:shallow:0
+LysRmOl[which(LysRmOl$depth == "shallow" & LysRmOl$toc == 0), "toc"] <- NA
+
+summary(LysRmOl)
+
+
+# Melt data frame
+lysMlt <- melt(LysRmOl, id = c("time", "Date", "temp", "chamber", "location", "depth", "id"), na.rm = TRUE)
 lysMlt$variable <- factor(lysMlt$variable, levels = c(ntrs)) # change the level order of variable 
 
 # chamber summary table & mean
@@ -18,6 +31,9 @@ wb <- createWorkbook()
 # worksheet for rowdata and rowdata without outlier
 sheet <- createSheet(wb,sheetName="row_data")
 addDataFrame(lys, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
+
+sheet <- createSheet(wb,sheetName="row_data_withoutOutlier")
+addDataFrame(LysRmOl, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
 
 # worksheets for chamber summary
 vars <- c("Nitrate", "Ammonium", "Phosphate", "TotalOrganicC", "TotalC", "InorganicC", "TotalN")
