@@ -10,7 +10,7 @@
 %%% Temp %%%
 \subsubsection{Temp trt}
 
-\begin{figure}[!h]\label{figure:temp_LysimeterTotal C}
+\begin{figure}[!h]\label{figure:temp_LysimeterTC}
 
 \begin{center}
 
@@ -22,7 +22,7 @@ TrtFg[[4]]
 \end{center}
 \end{figure}
 
-<<TableTempTC, echo=FALSE, results='asis'>>=
+<<TableTC, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[["tc.shallow"]],
              caption = "Temp trt mean of TC in soil water at a shallow layer", 
              label = "table:tempLysTCS",
@@ -49,7 +49,7 @@ print(xtable(TrtSmmryTbl[["tc.deep"]],
 \paragraph{Shallow}
 \noindent
 
-<<StatTempTotalCS, echo=TRUE, results='markup'>>=
+<<StatTempTCS, echo=TRUE, results='markup'>>=
 range(lys$tc[lys$depth == "shallow"], na.rm = TRUE)
 bxplts(value = "tc", ofst = 1, data = subset(lys, depth == "shallow"))
 
@@ -156,7 +156,7 @@ qqline(residuals.lm(Fml))
 \clearpage
 \subsubsection{Chamber}
 
-\begin{figure}[!h]\label{figure:Ch_LysimeterTotal C}
+\begin{figure}[!h]\label{figure:Ch_LysimeterTC}
 
 \begin{center}
 
