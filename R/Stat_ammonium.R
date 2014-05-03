@@ -51,10 +51,24 @@ qqline(residuals.lm(Fml))
 range(lys$nh[lys$depth == "deep"])
 
 bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep"))
+bxplts(value = "nh", ofst= .03, data = subset(lys, depth == "deep"))
   #remove the lower outlier
+bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027))))
+bxplts(value = "nh", ofst= 0.025, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027))))
 
-bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep" & nh > min(nh)))
-  # improved a lot; log looks better
+bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027, 0.4002))))
+bxplts(value = "nh", ofst= 0.03, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027, 0.4002))))
+bxplts(value = "nh", ofst= 0.03, data = subset(lys, depth == "deep" & nh != -0.0027))
+
+
+
+summary(subset(lys, depth == "deep" & nh < 0.4))
+summary(subset(lys, depth == "deep"))
+
+max(lys$nh)
+
+
+# improved a lot; log looks better
 
 NHRmOl <- subset(lys, nh > min(nh))
 
