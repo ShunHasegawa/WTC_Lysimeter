@@ -52,30 +52,12 @@ range(lys$nh[lys$depth == "deep"])
 
 bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep"))
 bxplts(value = "nh", ofst= .03, data = subset(lys, depth == "deep"))
-  #remove the lower outlier
-bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027))))
-bxplts(value = "nh", ofst= 0.025, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027))))
-
-bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027, 0.4002))))
-bxplts(value = "nh", ofst= 0.03, data = subset(lys, depth == "deep" & !(nh %in% c(-0.0027, 0.4002))))
-bxplts(value = "nh", ofst= 0.03, data = subset(lys, depth == "deep" & nh != -0.0027))
-
-
-
-summary(subset(lys, depth == "deep" & nh < 0.4))
-summary(subset(lys, depth == "deep"))
-
-max(lys$nh)
-
-
-# improved a lot; log looks better
-
-NHRmOl <- subset(lys, nh > min(nh))
+  # inverse seems slightly better
 
 # different random factor structure
-m1 <- lme(log(nh + .00271) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = NHRmOl)
-m2 <- lme(log(nh + .00271) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = NHRmOl)
-m3 <- lme(log(nh + .00271) ~ temp * time, random = ~1|id, subset = depth == "deep", data = NHRmOl)
+m1 <- lme(1/(nh + .03) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
+m2 <- lme(1/(nh + .03) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = lys)
+m3 <- lme(1/(nh + .03) ~ temp * time, random = ~1|id, subset = depth == "deep", data = lys)
 anova(m1, m2, m3)
   # m3 is slightly better
 
@@ -94,9 +76,9 @@ MdlSmpl(atml)
 Fml <- MdlSmpl(atml)$model.reml
 
 # The final model is:
-lme(log(nh + .00271) ~ time, random = ~1|id, 
+lme(1/(nh + .03) ~ time, random = ~1|id, 
     correlation=corAR1(),
-    subset = depth == "deep", data = NHRmOl)
+    subset = depth == "deep", data = lys)
 
 Anova(Fml)
 
