@@ -6,10 +6,11 @@ range(lys$toc[lys$depth == "shallow"], na.rm = TRUE)
 bxplts(value = "toc", ofst = 1, data = subset(lys, depth == "shallow"))
 
 # remove lower outlier
-bxplts(value = "toc", ofst = 1, data = subset(lys, depth == "shallow" & toc > min(toc, na.rm = TRUE)))
-  # inverse looks slightly better, but homogeneity of variance is violated
+nrow(subset(lys, depth == "shallow" & toc == 0))
+  # there's only one 0; remove this
 
-tocRmOl <- subset(lys, toc > min(toc, na.rm = TRUE))
+bxplts(value = "toc", data = subset(lys, depth == "shallow" & toc > 0))
+  # inverse looks slightly better, but homogeneity of variance is violated
 
 # different random factor structure
 m1 <- lme(1/(toc + 1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
