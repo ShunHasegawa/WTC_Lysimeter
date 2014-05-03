@@ -57,6 +57,64 @@ Anova(MdlSmpl(m3)$model.reml)
 plot(MdlSmpl(m3)$model.reml)
   # but even more wedged...
 
+##############################
+## try other transformation ##
+##############################
+
+# Inverse transformation
+
+# plot mean vs variance
+Rwdf <- ddply(tcRmOl, .(temp, time), summarise, M = mean(tc, na.rm = TRUE), V = var(tc, na.rm = TRUE))
+Invdf <- ddply(tcRmOl, .(temp, time), summarise, M = mean(1/(tc+1), na.rm = TRUE), V = var(1/(tc+1), na.rm = TRUE))
+dfs <- list('Raw' = Rwdf, 'Inv' = Invdf)
+
+par(mfrow = c(2,2))
+l_ply(1:2, function(x) plot(V ~ M, data = dfs[[x]], main = names(dfs)[x]))
+boxplot(tc ~ temp * time, data = subset(tcRmOl, depth == "shallow"))
+boxplot(1/(tc+1) ~ temp * time, data = subset(tcRmOl, depth == "shallow"))
+par(mfrow = c(1,1))
+
+  # mean-variabnce constancy is improved a lot
+
+# different random factor structure
+m1 <- lme(1/(tc+1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
+          data = tcRmOl, na.action = "na.omit")
+m2 <- lme(1/(tc+1) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
+          data = tcRmOl, na.action = "na.omit")
+m3 <- lme(1/(tc+1) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
+          data = tcRmOl, na.action = "na.omit")
+anova(m1, m2, m3)
+  # m3 is slightly better
+
+# Autocorrelation
+atcr.cmpr(m3, rndmFac= "id")
+  # model 4 is best
+
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+
+# model simplification
+MdlSmpl(atml)
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# The final model is:
+lme(1/(tc+1) ~ temp * time, random = ~1|id, 
+    subset = depth == "shallow", 
+    correlation=corAR1(),
+    data = tcRmOl, na.action = "na.omit")
+
+
+Anova(Fml)
+
+plot(Fml)
+
+# model diagnosis
+plot(Fml)
+  # homogeity of variance is improved a lot
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+
 
 ########
 # Deep #
