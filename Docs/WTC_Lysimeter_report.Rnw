@@ -29,8 +29,8 @@ library(xlsx)
 library(contrast)
 library(effects)
 library(ggplot2)
-library(gridExtra)
 library(xtable)
+library(gridExtra)
 
 source("R//functions.R")
 load("Output/Data/WTC_lysimeter.RData")
@@ -52,7 +52,7 @@ source("R//Figs.R")
 %%%%%%%%%%%
 % Nitrate %
 %%%%%%%%%%%
-
+\Sexpr{knit_child('LysimeterNitrate.Rnw')}
 %%%%%%%%%%%%
 % Ammonium %
 %%%%%%%%%%%%
@@ -71,3 +71,11 @@ source("R//Figs.R")
 %%%%%%
 % TN %
 %%%%%%
+
+%%%%%%%%%%%%%%%%
+% List of figs %
+%%%%%%%%%%%%%%%%
+\clearpage
+\listoffigures
+
+\end{document}
