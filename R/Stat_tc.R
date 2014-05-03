@@ -20,8 +20,6 @@ m3 <- lme(1/(tc+1) ~ temp * time, random = ~1|id, subset = depth == "shallow",
 anova(m1, m2, m3)
   # m3 is slightly better
 
-Anova(m3)
-
 # Autocorrelation
 atcr.cmpr(m3, rndmFac= "id")
   # model 4 is best
@@ -29,6 +27,8 @@ atcr.cmpr(m3, rndmFac= "id")
 atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
 # model simplification
+Anova(atml)
+
 MdlSmpl(atml)
 
 Fml <- MdlSmpl(atml)$model.reml
@@ -56,7 +56,7 @@ qqline(residuals.lm(Fml))
 ########
 range(lys$tc[lys$depth == "deep"], na.rm = TRUE)
 bxplts(value = "tc", data = subset(lys, depth == "deep"))
-# log looks better
+  # log looks better
   
 # different random factor structure
 m1 <- lme(log(tc) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
@@ -66,25 +66,23 @@ m2 <- lme(log(tc) ~ temp * time, random = ~1|chamber, subset = depth == "deep",
 m3 <- lme(log(tc) ~ temp * time, random = ~1|id, subset = depth == "deep", 
           data = lys, na.action = "na.omit")
 anova(m1, m2, m3)
-# m1 is slightly better
+  # m3 is slightly better
 
 # autcorrelation
-atcr.cmpr(m1, rndmFac= "chamber/location")
+atcr.cmpr(m3, rndmFac= "id")
 # model4 is best
 
-atml <- atcr.cmpr(m1, rndmFac= "chamber/location")[[4]]
-
-Anova(atml)
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
 # model simplification
+Anova(atml)
 MdlSmpl(atml)
-# interaction of temp x time, and temp is removed
+  # interaction of temp x time, and temp is removed
 
 Fml <- MdlSmpl(atml)$model.reml
 
 # the final model is:
-lme(log(tc) ~ time, 
-    random = ~1|chamber/location,
+lme(log(tc) ~ time, random = ~1|id, 
     correlation=corAR1(),
     subset = depth == "deep", 
     data = lys, na.action = "na.omit")
