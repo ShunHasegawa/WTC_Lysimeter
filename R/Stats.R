@@ -17,3 +17,19 @@ source("R//Stat_phosphate.R")
 # TOC #
 #######
 source("R//Stat_toc.R")
+
+######
+# TC #
+######
+source("R/Stat_tc.R")
+
+######
+# IC #
+######
+source("R/Stat_IC.R")
+
+######
+# TN #
+######
+source("R/Stat_tn.R")
+
