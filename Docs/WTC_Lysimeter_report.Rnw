@@ -84,7 +84,7 @@ source("R//Figs.R")
 % IC %
 %%%%%%
 \clearpage
-\Sexpr{knit_child('')}
+\Sexpr{knit_child('LysimeterIC.Rnw')}
 
 %%%%%%
 % TN %

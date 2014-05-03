@@ -1,0 +1,197 @@
+\Sexpr{set_parent('WTC_Lysimeter_reicrt.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Inorganic C}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_LysimeterIC}
+
+\begin{center}
+
+<<FigTempIC, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[6]]
+@
+
+\caption{Inorganic C in soil water at temperature treatments}
+\end{center}
+\end{figure}
+
+<<TableTempIC, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[["ic.shallow"]],
+             caption = "Temp trt mean of IC in soil water at a shallow layer", 
+             label = "table:tempLysICS",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+print(xtable(TrtSmmryTbl[["ic.deep"]],
+             caption = "Temp trt mean of IC in soil water at a deep layer", 
+             label = "table:tempLysICD",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\clearpage
+
+\paragraph{Stats}
+
+%% Shallow %%
+\paragraph{Shallow}
+\noindent
+
+<<StatTempICS, echo=TRUE, results='markup'>>=
+range(lys$ic[lys$depth == "shallow"], na.rm = TRUE)
+bxplts(value = "ic", ofst = .1, data = subset(lys, depth == "shallow"))
+hist(subset(lys, depth == "shallow")$ic)
+  # Too many 0s. any of transformations don't seem to work
+
+# Mean vs variabne
+df <- ddply(lys, .(temp, time), summarise, M = mean(ic, na.rm = TRUE), V = mean(ic, na.rm = TRUE))
+plot(V ~ M, data = df)
+  # seems poisson error but the response variable is not integer 
+
+a <- subset(lys, depth == "shallow")$ic
+hist(a, breaks= seq(0, 0.6, 0.01))
+par(mfrow = c(3,3))
+for (i in 0:6) {
+  hist(round(a * 10^(i)), main = paste("10^", i, sep = ""))
+}
+par(mfrow = c(1,1))
+
+# make the variable interger by multiplying 100
+m1 <- glmer(round(ic * 100) ~ temp * time + (1|chamber/location), family = poisson, 
+            data = subset(lys, depth == "shallow"), 
+            na.action = "na.omit")
+
+m2 <- glmer(round(ic * 100) ~ temp + time + (1|chamber/location), family = poisson, 
+            data = subset(lys, depth == "shallow"), 
+            na.action = "na.omit")
+
+anova(m1, m2)
+plot(m1)
+@
+
+%% Deep %%
+\paragraph{Deep}
+\noindent
+<<StatTempICD, echo=TRUE, results='markup'>>=
+range(lys$ic[lys$depth == "deep"], na.rm = TRUE)
+bxplts(value = "ic", ofst=.01 ,data = subset(lys, depth == "deep"))
+  # log looks better
+
+# different random factor structure
+m1 <- lme(log(ic+.1) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
+          data = lys, na.action = "na.omit", method = "ML")
+m2 <- lme(log(ic+.1) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
+          data = lys, na.action = "na.omit", method = "ML")
+m3 <- lme(log(ic+.1) ~ temp * time, random = ~1|id, subset = depth == "deep", 
+          data = lys, na.action = "na.omit", method = "ML")
+anova(m1, m2, m3)
+  # m3 is slightly better
+
+# auicorrelation
+atcr.cmpr(m3, rndmFac= "id")
+# model4 is best
+  
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+
+# model simplification
+Anova(atml)
+MdlSmpl(atml)
+# interaction of temp x time, and temp is removed
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# the final model is:
+lme(log(ic + .1) ~ time, random = ~1|id, 
+    correlation=corAR1(),
+    subset = depth == "deep", 
+    data = lys, na.action = "na.omit")
+
+Anova(Fml)
+
+summary(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+  # this result is not reliable....
+@
+
+%%% Chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:Ch_LysimeterIC}
+
+\begin{center}
+
+<<FigChIC, echo=FALSE, fig.height=6, fig.width=6>>=
+ChFg[[6]]
+@
+
+\caption{IC in soil water in each chamber}
+\end{center}
+\end{figure}
+
+<<TableChIC, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[["ic.shallow"]][, 1:13],
+             caption = "Chamber means for IC in 
+             soil water at a shallow layer",
+             label = "table:chamber_LysICS",
+             NA.string = "NA",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["ic.shallow"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["ic.shallow"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+
+print(xtable(ChSmmryTbl[["ic.deep"]][, 1:13],
+             caption = "Chamber means for IC in 
+             soil water at a deep layer",
+             label = "table:chamber_LysICD",
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["ic.deep"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["ic.deep"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@
