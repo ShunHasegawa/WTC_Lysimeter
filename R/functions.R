@@ -285,6 +285,7 @@ MdlSmpl <- function(model){
 #############################################
 # compare different auto-correlation models #
 #############################################
+
 atcr.cmpr <- function(model, rndmFac){
   if(rndmFac == "chamber/location"){
     model2 <- update(model,corr=corCompSymm(form=~1|chamber/location)) 
@@ -300,7 +301,8 @@ atcr.cmpr <- function(model, rndmFac){
   model4 <- update(model,correlation=corAR1()) 
   model5 <- update(model,correlation=corARMA(q=1))
   a <- anova(model,model2,model3,model4,model5)
-  models <- list(model, model2, model3, model4, model5, a)
+  rownames(a) <- c("NULL", "corCompSymm", "corARMA(q=2)", "corAR1()", "corARMA(q=1)")
+  models <- list(model, model2, model3, model4, model5, 'models' = a)
   return(models)
 }
 
