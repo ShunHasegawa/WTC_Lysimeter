@@ -10,7 +10,9 @@ nrow(subset(lys, depth == "shallow" & toc == 0))
   # there's only one 0; remove this
 
 bxplts(value = "toc", data = subset(lys, depth == "shallow" & toc > 0))
-  # inverse looks slightly better, but homogeneity of variance is violated
+  # inverse looks slightly better
+
+tocRmOl <- subset(lys, toc > 0)
 
 # different random factor structure
 m1 <- lme(1/(toc + 1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
