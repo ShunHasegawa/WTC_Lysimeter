@@ -45,7 +45,6 @@ qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
 
-
 ########
 # Deep #
 ########
@@ -55,12 +54,11 @@ bxplts(value = "tn", data = subset(lys, depth == "deep"))
 
 # different random factor structure
 m1 <- lme(tn^(1/3) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
-          data = lys, na.action = "na.omit", method = "ML")
+          data = lys, na.action = "na.omit")
 m2 <- lme(tn^(1/3) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
           data = lys, na.action = "na.omit")
 m3 <- lme(tn^(1/3) ~ temp * time, random = ~1|id, subset = depth == "deep", 
           data = lys, na.action = "na.omit")
-
 anova(m1, m2, m3)
   # m1 is slightly better
 
