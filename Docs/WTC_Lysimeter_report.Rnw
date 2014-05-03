@@ -76,14 +76,21 @@ source("R//Figs.R")
 %%%%%%%
 % TOC %
 %%%%%%%
+\clearpage
+\Sexpr{knit_child('LysimeterTOC.Rnw')}
 
 
 %%%%%%
 % IC %
 %%%%%%
+\clearpage
+\Sexpr{knit_child('')}
+
 %%%%%%
 % TN %
 %%%%%%
+\clearpage
+\Sexpr{knit_child('')}
 
 %%%%%%%%%%%%%%%%
 % List of figs %
