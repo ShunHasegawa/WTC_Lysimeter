@@ -64,7 +64,7 @@ anova(m1, m2, m3)
   # m2 is slightly better
 
 # autocorrelation
-atcr.cmpr(m2, rndmFac= "chamber")
+atcr.cmpr(m2, rndmFac= "chamber")$models
   # model3 is best
 
 atml <- atcr.cmpr(m2, rndmFac= "chamber")[[3]]
@@ -114,7 +114,7 @@ anova(m1, m2, m3)
   # m3 is slightly better
 
 # autocorrelation
-atcr.cmpr(m3, rndmFac= "id")
+atcr.cmpr(m3, rndmFac= "id")$models
   # model4 looks better
 
 atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
