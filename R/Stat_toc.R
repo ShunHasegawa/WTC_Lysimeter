@@ -107,12 +107,6 @@ plot(allEffects(Fml))
 
 # model diagnosis
 plot(Fml)
-# wedge-shaped: homogeity of variance is not met
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-
-
-Anova(MdlSmpl(m3)$model.reml)
-plot(MdlSmpl(m3)$model.reml)
-# but even more wedged...
