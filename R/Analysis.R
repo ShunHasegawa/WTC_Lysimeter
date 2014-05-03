@@ -23,27 +23,7 @@ source("R//functions.R")
 # source("R//ProcessLysimeter.R")
 load("Output/Data/WTC_lysimeter.RData")
 
-# time
-lys$time <- factor(as.numeric(factor(lys$Date)))
-  # make sure Date is in Date format!!
-
-# temp
-lys$temp <- factor(ifelse(as.numeric(as.character(lys$chamber)) %in% seq(2, 12, 2), "elev", "amb"))
-
-# id
-lys$id <- lys$chamber:lys$location
-
-# remove non-informative rows (rows with all na for nutrient vaeiables)
 ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
-
-lys <- lys[apply(lys[,ntrs], 1, function(x) !all(is.na(x))), ]
-
-
-# reorder depth factor
-levels(lys$depth)
-lys$depth <- factor(lys$depth, levels = c("shallow", "deep"))
-
-
 #################
 # Summary table #
 #################
