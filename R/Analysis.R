@@ -23,7 +23,6 @@ source("R//functions.R")
 # source("R//ProcessLysimeter.R")
 load("Output/Data/WTC_lysimeter.RData")
 
-ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
 #################
 # Summary table #
 #################
