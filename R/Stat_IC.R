@@ -17,7 +17,7 @@ par(mfrow = c(3,3))
 for (i in 0:6) {
   hist(round(a * 10^(i)), main = paste("10^", i, sep = ""))
 }
-
+par(mfrow = c(1,1))
 
 # make the variable interger by multiplying 100
 m1 <- glmer(round(ic * 100) ~ temp * time + (1|chamber/location), family = poisson, 
