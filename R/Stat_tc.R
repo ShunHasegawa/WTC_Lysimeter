@@ -6,6 +6,10 @@ bxplts(value = "tc", ofst = 1, data = subset(lys, depth == "shallow"))
 
 # remove lower outlier
 bxplts(value = "tc", ofst = 1, data = subset(lys, depth == "shallow" & tc != min(tc, na.rm = TRUE)))
+  # inverse looks better
+
+tcRmOl <- subset(lys, depth == "shallow" & tc != min(tc, na.rm = TRUE))
+
 # different random factor structure
 m1 <- lme(1/(tc+1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
           data = tcRmOl, na.action = "na.omit")
@@ -15,6 +19,8 @@ m3 <- lme(1/(tc+1) ~ temp * time, random = ~1|id, subset = depth == "shallow",
           data = tcRmOl, na.action = "na.omit")
 anova(m1, m2, m3)
   # m3 is slightly better
+
+Anova(m3)
 
 # Autocorrelation
 atcr.cmpr(m3, rndmFac= "id")
@@ -28,7 +34,7 @@ MdlSmpl(atml)
 Fml <- MdlSmpl(atml)$model.reml
 
 # The final model is:
-lme(1/(tc+1) ~ temp * time, random = ~1|id, 
+lme(1/(tc+1) ~ temp + time, random = ~1|id, 
     subset = depth == "shallow", 
     correlation=corAR1(),
     data = tcRmOl, na.action = "na.omit")
@@ -36,11 +42,10 @@ lme(1/(tc+1) ~ temp * time, random = ~1|id,
 
 Anova(Fml)
 
-plot(Fml)
+plot(allEffects(Fml))
 
 # model diagnosis
 plot(Fml)
-  # homogeity of variance is improved a lot
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
