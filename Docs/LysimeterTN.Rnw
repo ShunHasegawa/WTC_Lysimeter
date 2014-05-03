@@ -1,0 +1,213 @@
+\Sexpr{set_parent('WTC_Lysimeter_retnrt.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Total N}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_LysimeterTN}
+
+\begin{center}
+
+<<FigTempTN, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[7]]
+@
+
+\caption{Total N in soil water at temperature treatments}
+\end{center}
+\end{figure}
+
+<<TableTempTN, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[["tn.shallow"]],
+             caption = "Temp trt mean of TN in soil water at a shallow layer", 
+             label = "table:tempLysTNS",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+print(xtable(TrtSmmryTbl[["tn.deep"]],
+             caption = "Temp trt mean of TN in soil water at a deep layer", 
+             label = "table:tempLysTND",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\clearpage
+
+\paragraph{Stats}
+
+%% Shallow %%
+\paragraph{Shallow}
+\noindent
+
+<<StatTempTNS, echo=TRUE, results='markup'>>=
+range(lys$tn[lys$depth == "shallow"], na.rm = TRUE)
+bxplts(value = "tn", ofst = 10, data = subset(lys, depth == "shallow"))
+  # log seems better
+
+# different random factor structure
+m1 <- lme(log(tn +10)  ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
+          data = lys, na.action = "na.omit")
+m2 <- lme(log(tn +10) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
+          data = lys, na.action = "na.omit")
+m3 <- lme(log(tn +10) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
+          data = lys, na.action = "na.omit")
+anova(m1, m2, m3)
+  # m3 is slightly better
+
+# Autocorrelation
+atcr.cmpr(m3, rndmFac= "id")
+  # model 3 is best
+
+atml <- atcr.cmpr(m3, rndmFac= "id")[[3]]
+
+# model simpliftnation
+Anova(atml)
+
+MdlSmpl(atml)
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# The final model is:
+lme(log(tn + 10) ~ time, random = ~1|id, 
+    subset = depth == "shallow", 
+    correlation=corARMA(q=2),
+    data = lys, na.action = "na.omit")
+
+
+Anova(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+@
+
+%% Deep %%
+\paragraph{Deep}
+\noindent
+<<StatTempTND, echo=TRUE, results='markup'>>=
+range(lys$tn[lys$depth == "deep"], na.rm = TRUE)
+bxplts(value = "tn", data = subset(lys, depth == "deep"))
+  # power(1/3) looks better
+
+# different random factor structure
+m1 <- lme(tn^(1/3) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
+          data = lys, na.action = "na.omit")
+m2 <- lme(tn^(1/3) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
+          data = lys, na.action = "na.omit")
+m3 <- lme(tn^(1/3) ~ temp * time, random = ~1|id, subset = depth == "deep", 
+          data = lys, na.action = "na.omit")
+anova(m1, m2, m3)
+  # m1 is slightly better
+
+# autnorrelation
+atcr.cmpr(m1, rndmFac= "chamber/location")
+  # model4 is best
+
+atml <- atcr.cmpr(m1, rndmFac= "chamber/location")[[4]]
+
+# model simpliftnation
+Anova(atml)
+MdlSmpl(atml)
+  # interaction of temp x time, and temp is removed
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# the final model is:
+
+lme(tn^(1/3) ~ time, random = ~1|chamber/location, 
+    ,correlation=corAR1(),
+    subset = depth == "deep", 
+    data = lys, na.action = "na.omit")
+
+Anova(Fml)
+
+summary(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+@
+
+
+
+%%% Chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:Ch_LysimeterTN}
+
+\begin{center}
+
+<<FigChTN, echo=FALSE, fig.height=6, fig.width=6>>=
+ChFg[[7]]
+@
+
+\caption{Total N in soil water in each chamber}
+\end{center}
+\end{figure}
+
+<<TableChTN, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[["tn.shallow"]][, 1:13],
+             caption = "Chamber means for TN in 
+             soil water at a shallow layer",
+             label = "table:chamber_LysTNS",
+             NA.string = "NA",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tn.shallow"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tn.shallow"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+
+print(xtable(ChSmmryTbl[["tn.deep"]][, 1:13],
+             caption = "Chamber means for TN in 
+             soil water at a deep layer",
+             label = "table:chamber_LysTND",
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tn.deep"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tn.deep"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@

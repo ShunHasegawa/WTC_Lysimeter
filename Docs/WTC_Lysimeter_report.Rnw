@@ -90,7 +90,7 @@ source("R//Figs.R")
 % TN %
 %%%%%%
 \clearpage
-\Sexpr{knit_child('')}
+\Sexpr{knit_child('LysimeterTN.Rnw')}
 
 %%%%%%%%%%%%%%%%
 % List of figs %
