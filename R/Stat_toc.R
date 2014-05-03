@@ -2,21 +2,21 @@
 # Shallow #
 ###########
 range(lys$toc[lys$depth == "shallow"], na.rm = TRUE)
-boxplot(lys$toc)
+
 bxplts(value = "toc", ofst = 1, data = subset(lys, depth == "shallow"))
 
 # remove lower outlier
 bxplts(value = "toc", ofst = 1, data = subset(lys, depth == "shallow" & toc > min(toc, na.rm = TRUE)))
-  # log looks slightly better, but homogeneity of variance is violated
+  # inverse looks slightly better, but homogeneity of variance is violated
 
 tocRmOl <- subset(lys, toc > min(toc, na.rm = TRUE))
 
 # different random factor structure
-m1 <- lme(log(toc + 1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
+m1 <- lme(1/(toc + 1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
           data = tocRmOl, na.action = "na.omit")
-m2 <- lme(log(toc + 1) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
+m2 <- lme(1/(toc + 1) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
           data = tocRmOl, na.action = "na.omit")
-m3 <- lme(log(toc + 1) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
+m3 <- lme(1/(toc + 1) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
           data = tocRmOl, na.action = "na.omit")
 anova(m1, m2, m3)
   # m3 is slightly better
@@ -27,9 +27,8 @@ atcr.cmpr(m3, rndmFac= "id")
 
 atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
-Anova(atml)
-
 # model simplification
+Anova(atml)
 MdlSmpl(atml)
   # interaction of temp x time; 
   # temp remained yet not significant
@@ -37,7 +36,7 @@ MdlSmpl(atml)
 Fml <- MdlSmpl(atml)$model.reml
 
 # the final model is:
-lme(log(toc + 1) ~ temp + time, random = ~1|id, 
+lme(1/(toc + 1) ~ temp + time, random = ~1|id, 
     subset = depth == "shallow", 
     correlation=corAR1(),
     data = tocRmOl, na.action = "na.omit")
@@ -50,16 +49,9 @@ plot(allEffects(Fml))
 
 # model diagnosis
 plot(Fml)
-  # wedge-shaped: homogeity of variance is not met
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-
-# if not using autocorrelation
-Anova(MdlSmpl(m3)$model.reml)
-plot(MdlSmpl(m3)$model.reml)
-  # but even more wedged...
-
 
 ########
 # Deep #
