@@ -1,0 +1,205 @@
+\Sexpr{set_parent('WTC_Lysimeter_report.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Phosphate}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_LysimeterPhosphate}
+
+\begin{center}
+
+<<FigTempPhosphate, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[3]]
+@
+
+\caption{Phosphate in soil water at temperature treatments}
+\end{center}
+\end{figure}
+
+<<TableTempPhosphate, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[["po.shallow"]],
+             caption = "Temp trt mean of Phosphate in soil water at a shallow layer", 
+             label = "table:tempLysPhosphateS",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+print(xtable(TrtSmmryTbl[["po.deep"]],
+             caption = "Temp trt mean of Phosphate in soil water at a deep layer", 
+             label = "table:tempLysPhosphateD",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\clearpage
+
+\paragraph{Stats}
+
+%% Shallow %%
+\paragraph{Shallow}
+\noindent
+
+<<StatTempPhosphateS, echo=TRUE, results='markup'>>=
+range(lys$po[lys$depth == "shallow"])
+bxplts(value = "po", ofst = 0.001, data = subset(lys, depth == "shallow"))
+  #sqrt looks better
+
+# different random factor structure
+m1 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", data = lys)
+m2 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", data = lys)
+m3 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|id, subset = depth == "shallow", data = lys)
+anova(m1, m2, m3)
+  # m3 is slightly better
+
+# autocorrelation
+atcr.cmpr(m3, rndmFac= "id")
+  # model4 is best
+
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+
+Anova(atml)
+
+# model simplification
+MdlSmpl(atml)
+  # interaction of temp x time and temp are removable
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# the final model is:
+lme(sqrt(po + .001) ~ time, random = ~1|id, 
+    correlation=corAR1(),
+    subset = depth == "shallow", data = lys)
+
+Anova(Fml)
+
+summary(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+@
+
+%% Deep %%
+\paragraph{Deep}
+\noindent
+<<StatTempPhosphateD, echo=TRUE, results='markup'>>=
+range(lys$po[lys$depth == "deep"])
+bxplts(value = "po", data = subset(lys, depth == "deep"))
+  # sqrt looks better
+
+# different random factor structure
+m1 <- lme(sqrt(po) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
+m2 <- lme(sqrt(po) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = lys)
+m3 <- lme(sqrt(po) ~ temp * time, random = ~1|id, subset = depth == "deep", data = lys)
+anova(m1, m2, m3)
+  # m1 is slightly better
+
+# autocorrelation
+atcr.cmpr(m1, rndmFac= "chamber/location")
+  # no need for correlation
+
+Anova(m1)
+
+# model simplification
+MdlSmpl(m1)
+  # interaction of temp x time and temp are removable
+
+Fml <- MdlSmpl(m1)$model.reml
+
+# the final model is:
+lme(sqrt(po) ~ time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
+
+Anova(Fml)
+
+summary(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+  # not very great....
+
+@
+
+
+
+%%% Chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:Ch_LysimeterPhosphate}
+
+\begin{center}
+
+<<FigChPhosphate, echo=FALSE, fig.height=6, fig.width=6>>=
+ChFg[[3]]
+@
+
+\caption{Phosphate in soil water in each chamber}
+\end{center}
+\end{figure}
+
+<<TableChPhosphate, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[["po.shallow"]][, 1:13],
+             caption = "Chamber means for Phosphate in 
+             soil water at a shallow layer",
+             label = "table:chamber_LysPhosphateS",
+             NA.string = "NA",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["po.shallow"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["po.shallow"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+
+print(xtable(ChSmmryTbl[["po.deep"]][, 1:13],
+             caption = "Chamber means for Phosphate in 
+             soil water at a deep layer",
+             label = "table:chamber_LysPhosphateD",
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["po.deep"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["po.deep"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@
