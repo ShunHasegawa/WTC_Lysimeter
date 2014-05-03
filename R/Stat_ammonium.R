@@ -4,7 +4,12 @@
 range(lys$nh[lys$depth == "shallow"])
 
 bxplts(value = "nh", ofst= 0.0002, data = subset(lys, depth == "shallow"))
-  # log is slightly better, but homogeneity of variabne 
+bxplts(value = "nh", ofst= .01, data = subset(lys, depth == "shallow"))
+
+
+
+
+# log is slightly better, but homogeneity of variabne 
   # is violated
 
 # different random factor structure
