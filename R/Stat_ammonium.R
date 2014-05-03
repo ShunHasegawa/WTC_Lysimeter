@@ -5,37 +5,31 @@ range(lys$nh[lys$depth == "shallow"])
 
 bxplts(value = "nh", ofst= 0.0002, data = subset(lys, depth == "shallow"))
 bxplts(value = "nh", ofst= .01, data = subset(lys, depth == "shallow"))
-
-
-
-
-# log is slightly better, but homogeneity of variabne 
-  # is violated
+  # inverse looks better
 
 # different random factor structure
-m1 <- lme(log(nh + .0002) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", data = lys)
-m2 <- lme(log(nh + .0002) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", data = lys)
-m3 <- lme(log(nh + .0002) ~ temp * time, random = ~1|id, subset = depth == "shallow", data = lys)
+m1 <- lme(1/(nh + .01) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", data = lys)
+m2 <- lme(1/(nh + .01) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", data = lys)
+m3 <- lme(1/(nh + .01) ~ temp * time, random = ~1|id, subset = depth == "shallow", data = lys)
 anova(m1, m2, m3)
-  # m3 is slightly better
+  # m2 is slightly better
 
 # autocorrelation
-atcr.cmpr(m3, rndmFac= "id")
-  # model4 is best
+atcr.cmpr(m2, rndmFac= "chamber")
+  # model3 is best
 
-atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
-
-Anova(atml)
+atml <- atcr.cmpr(m2, rndmFac= "chamber")[[3]]
 
 # model simplification
+Anova(atml)
 MdlSmpl(atml)
-  # interaction of temp x time and temp are removable
+  # interaction of temp x time and temp are removed
 
 Fml <- MdlSmpl(atml)$model.reml
 
 # the final model is
-lme(log(nh + .0002) ~ time, random = ~1|id,
-    correlation=corAR1(),
+lme(1/(nh + .01) ~ time, random = ~1|chamber, 
+    correlation=corARMA(q=2),
     subset = depth == "shallow", data = lys)
 
 Anova(Fml)
@@ -46,10 +40,10 @@ plot(allEffects(Fml))
 
 # model diagnosis
 plot(Fml)
+  # wedge-shaped...
 qqnorm(Fml, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-  # not great....
 
 ########
 # Deep #
