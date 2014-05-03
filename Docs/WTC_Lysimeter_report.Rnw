@@ -64,15 +64,20 @@ source("R//Figs.R")
 % Phosphate %
 %%%%%%%%%%%%%
 \clearpage
-\Sexpr{knit_child('')}
+\Sexpr{knit_child('LysimeterPhosphate.Rnw')}
 
 
 %%%%%%
 % TC %
 %%%%%%
+\clearpage
+\Sexpr{knit_child('LysimeterTC.Rnw')}
+
 %%%%%%%
 % TOC %
 %%%%%%%
+
+
 %%%%%%
 % IC %
 %%%%%%

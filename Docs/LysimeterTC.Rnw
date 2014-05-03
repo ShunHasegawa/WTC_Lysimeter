@@ -1,0 +1,217 @@
+\Sexpr{set_parent('WTC_Lysimeter_report.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Total C}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_LysimeterTotal C}
+
+\begin{center}
+
+<<FigTempTC, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[4]]
+@
+
+\caption{Total C in soil water at temperature treatments}
+\end{center}
+\end{figure}
+
+<<TableTempTC, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[["tc.shallow"]],
+             caption = "Temp trt mean of TC in soil water at a shallow layer", 
+             label = "table:tempLysTCS",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+print(xtable(TrtSmmryTbl[["tc.deep"]],
+             caption = "Temp trt mean of TC in soil water at a deep layer", 
+             label = "table:tempLysTCD",
+             NA.string = c("NA"),
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\clearpage
+
+\paragraph{Stats}
+
+%% Shallow %%
+\paragraph{Shallow}
+\noindent
+
+<<StatTempTotalCS, echo=TRUE, results='markup'>>=
+range(lys$tc[lys$depth == "shallow"], na.rm = TRUE)
+bxplts(value = "tc", ofst = 1, data = subset(lys, depth == "shallow"))
+
+# remove lower outlier
+bxplts(value = "tc", ofst = 1, data = subset(lys, depth == "shallow" & tc != min(tc, na.rm = TRUE)))
+  # inverse looks better
+
+tcRmOl <- subset(lys, depth == "shallow" & tc != min(tc, na.rm = TRUE))
+
+# different random factor structure
+m1 <- lme(1/(tc+1) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
+          data = tcRmOl, na.action = "na.omit")
+m2 <- lme(1/(tc+1) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
+          data = tcRmOl, na.action = "na.omit")
+m3 <- lme(1/(tc+1) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
+          data = tcRmOl, na.action = "na.omit")
+anova(m1, m2, m3)
+  # m3 is slightly better
+
+# Autocorrelation
+atcr.cmpr(m3, rndmFac= "id")
+  # model 4 is best
+
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+
+# model simplification
+Anova(atml)
+
+MdlSmpl(atml)
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# The final model is:
+lme(1/(tc+1) ~ temp + time, random = ~1|id, 
+    subset = depth == "shallow", 
+    correlation=corAR1(),
+    data = tcRmOl, na.action = "na.omit")
+
+
+Anova(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+@
+
+%% Deep %%
+\paragraph{Deep}
+\noindent
+<<StatTempTCD, echo=TRUE, results='markup'>>=
+range(lys$tc[lys$depth == "deep"], na.rm = TRUE)
+bxplts(value = "tc", data = subset(lys, depth == "deep"))
+  # log looks better
+  
+# different random factor structure
+m1 <- lme(log(tc) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
+          data = lys, na.action = "na.omit")
+m2 <- lme(log(tc) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
+          data = lys, na.action = "na.omit")
+m3 <- lme(log(tc) ~ temp * time, random = ~1|id, subset = depth == "deep", 
+          data = lys, na.action = "na.omit")
+anova(m1, m2, m3)
+  # m3 is slightly better
+
+# autcorrelation
+atcr.cmpr(m3, rndmFac= "id")
+# model4 is best
+
+atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+
+# model simplification
+Anova(atml)
+MdlSmpl(atml)
+  # interaction of temp x time, and temp is removed
+
+Fml <- MdlSmpl(atml)$model.reml
+
+# the final model is:
+lme(log(tc) ~ time, random = ~1|id, 
+    correlation=corAR1(),
+    subset = depth == "deep", 
+    data = lys, na.action = "na.omit")
+
+Anova(Fml)
+
+summary(Fml)
+
+plot(allEffects(Fml))
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+@
+
+
+
+%%% Chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:Ch_LysimeterTotal C}
+
+\begin{center}
+
+<<FigChTC, echo=FALSE, fig.height=6, fig.width=6>>=
+ChFg[[3]]
+@
+
+\caption{Total C in soil water in each chamber}
+\end{center}
+\end{figure}
+
+<<TableChTC, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[["tc.shallow"]][, 1:13],
+             caption = "Chamber means for TC in 
+             soil water at a shallow layer",
+             label = "table:chamber_LysTCS",
+             NA.string = "NA",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tc.shallow"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tc.shallow"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+
+print(xtable(ChSmmryTbl[["tc.deep"]][, 1:13],
+             caption = "Chamber means for TC in 
+             soil water at a deep layer",
+             label = "table:chamber_LysTCD",
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tc.deep"]][,c(1, 14:25)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[["tc.deep"]][,c(1, 26:37)],
+             NA.string = c("NA"),
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@
