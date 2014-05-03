@@ -1,3 +1,5 @@
+ntrs <- c("no", "nh", "po", "toc", "tc", "ic", "tn")
+
 lysMlt <- melt(lys, id = c("time", "Date", "temp", "chamber", "location", "depth", "id"), na.rm = TRUE)
 lysMlt$variable <- factor(lysMlt$variable, levels = c(ntrs)) # change the level order of variable 
 
