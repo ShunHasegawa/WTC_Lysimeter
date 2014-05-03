@@ -307,7 +307,11 @@ atcr.cmpr <- function(model, rndmFac, showAll = FALSE){
   if(showAll) return(models) else
     return(models$models)
 }
-
+a <- model2
+names(a)
+b <- a$call
+a
+?return
 ###########################################
 # produce box plots with transformed data #
 ###########################################
