@@ -108,22 +108,23 @@ qqline(residuals.lm(Fml_D))
 
 ## ----Stat_WTC_Lys_TOC_S_Smmry
 # The initial model is:
-Iml_S
+Iml_S$call
 
 Anova(Iml_S)
 
 # The final model is:
-Iml_S
+Fml_S$call
 
-Anova(Iml_S)
+Anova(Fml_S)
 
 ## ----Stat_WTC_Lys_TOC_D_Smmry
 # The initial model is:
-Iml_D
+Iml_D$call
 
 Anova(Iml_D)
 
 # The final model is:
-Iml_D
+Fml_D$call
 
-Anova(Iml_D)
+Anova(Fml_D)
+

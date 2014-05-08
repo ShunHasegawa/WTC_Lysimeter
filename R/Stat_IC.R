@@ -83,23 +83,23 @@ qqline(residuals.lm(Fml_D))
   # this result is not reliable....
 
 ## ----Stat_WTC_Lys_IC_S_Smmry
-# The initial model is:
-Iml_S
+m1 <- glmer(round(ic * 100) ~ temp * time + (1|chamber/location), family = poisson, 
+            data = subset(lys, depth == "shallow"), 
+            na.action = "na.omit")
 
-Anova(Iml_S)
+m2 <- glmer(round(ic * 100) ~ temp + time + (1|chamber/location), family = poisson, 
+            data = subset(lys, depth == "shallow"), 
+            na.action = "na.omit")
 
-# The final model is:
-Iml_S
-
-Anova(Iml_S)
+anova(m1, m2)
 
 ## ----Stat_WTC_Lys_IC_D_Smmry
 # The initial model is:
-Iml_D
+Iml_D$call
 
 Anova(Iml_D)
 
 # The final model is:
-Iml_D
+Fml_D$call
 
-Anova(Iml_D)
+Anova(Fml_D)

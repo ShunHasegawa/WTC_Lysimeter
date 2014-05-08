@@ -87,40 +87,38 @@ MdlSmpl(Iml_D)
 
 Fml_D <- MdlSmpl(Iml_D)$model.reml
 
-# the final model is
+# The final model is
 Fml_D$call
 
-Anova(Fml)
+Anova(Fml_D)
 
 summary(Fml_D)
 
-plot(allEffects(Fml))
-
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|chamber)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_D)
+qqnorm(Fml_D, ~ resid(.)|chamber)
+qqnorm(residuals.lm(Fml_D))
+qqline(residuals.lm(Fml_D))
   # not very good...
 
 ## ----Stat_WTC_Lys_Nitrate_S_Smmry
 # The initial model is:
-Iml_S
+Iml_S$call
 
 Anova(Iml_S)
 
 # The final model is:
-Iml_S
+Fml_S$call
 
-Anova(Iml_S)
+Anova(Fml_S)
 
 ## ----Stat_WTC_Lys_Nitrate_D_Smmry
 # The initial model is:
-Iml_D
+Iml_D$call
 
 Anova(Iml_D)
 
 # The final model is:
-Iml_D
+Fml_D$call
 
-Anova(Iml_D)
+Anova(Fml_D)
