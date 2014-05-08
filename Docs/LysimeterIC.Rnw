@@ -54,38 +54,38 @@ read_chunk("R/Stat_IC.R")
 @
 
 
-%%%%%%%%%%%%%
-%% Summary %%
-%%%%%%%%%%%%%
-
-\paragraph{Shallow}
-\noindent
-
-<<Stat_WTC_Lys_IC_S_Smmry, echo=TRUE, results='markup'>>=
-@
-
-\paragraph{Deep}
-\noindent
-
-<<Stat_WTC_Lys_IC_D_Smmry, echo=TRUE, results='markup'>>=
-@
-
-
-% %%%%%%%%%%%%
-% %% Detail %%
-% %%%%%%%%%%%%
+% %%%%%%%%%%%%%
+% %% Summary %%
+% %%%%%%%%%%%%%
 % 
 % \paragraph{Shallow}
 % \noindent
 % 
-% <<Stat_WTC_Lys_IC_S, echo=TRUE, results='markup'>>=
+% <<Stat_WTC_Lys_IC_S_Smmry, echo=TRUE, results='markup'>>=
 % @
 % 
 % \paragraph{Deep}
 % \noindent
 % 
-% <<Stat_WTC_Lys_IC_D, echo=TRUE, results='markup'>>=
+% <<Stat_WTC_Lys_IC_D_Smmry, echo=TRUE, results='markup'>>=
 % @
+
+
+%%%%%%%%%%%%
+%% Detail %%
+%%%%%%%%%%%%
+
+\paragraph{Shallow}
+\noindent
+
+<<Stat_WTC_Lys_IC_S, echo=TRUE, results='markup', warning=TRUE>>=
+@
+
+\paragraph{Deep}
+\noindent
+
+<<Stat_WTC_Lys_IC_D, echo=TRUE, results='markup'>>=
+@
 
 
 %%% Chamber %%%

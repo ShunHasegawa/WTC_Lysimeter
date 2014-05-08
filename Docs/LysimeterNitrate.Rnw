@@ -83,38 +83,38 @@ read_chunk("R/Stat_nitrate.R")
 @
 
 
-%%%%%%%%%%%%%
-%% Summary %%
-%%%%%%%%%%%%%
-
-\paragraph{Shallow}
-\noindent
-
-<<Stat_WTC_Lys_Nitrate_S_Smmry, echo=TRUE, results='markup'>>=
-@
-
-\paragraph{Deep}
-\noindent
-
-<<Stat_WTC_Lys_Nitrate_D_Smmry, echo=TRUE, results='markup'>>=
-@
-
-
-% %%%%%%%%%%%%
-% %% Detail %%
-% %%%%%%%%%%%%
+% %%%%%%%%%%%%%
+% %% Summary %%
+% %%%%%%%%%%%%%
 % 
 % \paragraph{Shallow}
 % \noindent
 % 
-% <<Stat_WTC_Lys_Nitrate_S, echo=TRUE, results='markup'>>=
+% <<Stat_WTC_Lys_Nitrate_S_Smmry, echo=TRUE, results='markup'>>=
 % @
 % 
 % \paragraph{Deep}
 % \noindent
 % 
-% <<Stat_WTC_Lys_Nitrate_D, echo=TRUE, results='markup'>>=
+% <<Stat_WTC_Lys_Nitrate_D_Smmry, echo=TRUE, results='markup'>>=
 % @
+
+
+%%%%%%%%%%%%
+%% Detail %%
+%%%%%%%%%%%%
+
+\paragraph{Shallow}
+\noindent
+
+<<Stat_WTC_Lys_Nitrate_S, echo=TRUE, results='markup'>>=
+@
+
+\paragraph{Deep}
+\noindent
+
+<<Stat_WTC_Lys_Nitrate_D, echo=TRUE, results='markup'>>=
+@
 
 
 %%% Chamber %%%

@@ -54,38 +54,38 @@ read_chunk("R/Stat_ammonium.R")
 @
 
 
-%%%%%%%%%%%%%
-%% Summary %%
-%%%%%%%%%%%%%
-
-\paragraph{Shallow}
-\noindent
-
-<<Stat_WTC_Lys_Ammonium_S_Smmry, echo=TRUE, results='markup'>>=
-@
-
-\paragraph{Deep}
-\noindent
-
-<<Stat_WTC_Lys_Ammonium_D_Smmry, echo=TRUE, results='markup'>>=
-@
-
-
-% %%%%%%%%%%%%
-% %% Detail %%
-% %%%%%%%%%%%%
+% %%%%%%%%%%%%%
+% %% Summary %%
+% %%%%%%%%%%%%%
 % 
 % \paragraph{Shallow}
 % \noindent
 % 
-% <<Stat_WTC_Lys_Ammonium_S, echo=TRUE, results='markup'>>=
+% <<Stat_WTC_Lys_Ammonium_S_Smmry, echo=TRUE, results='markup'>>=
 % @
 % 
 % \paragraph{Deep}
 % \noindent
 % 
-% <<Stat_WTC_Lys_Ammonium_D, echo=TRUE, results='markup'>>=
+% <<Stat_WTC_Lys_Ammonium_D_Smmry, echo=TRUE, results='markup'>>=
 % @
+
+
+%%%%%%%%%%%%
+%% Detail %%
+%%%%%%%%%%%%
+
+\paragraph{Shallow}
+\noindent
+
+<<Stat_WTC_Lys_Ammonium_S, echo=TRUE, results='markup'>>=
+@
+
+\paragraph{Deep}
+\noindent
+
+<<Stat_WTC_Lys_Ammonium_D, echo=TRUE, results='markup'>>=
+@
 
 
 
