@@ -1,3 +1,5 @@
+## ----Stat_WTC_Lys_IC_S
+
 ###########
 # Shallow #
 ###########
@@ -31,6 +33,7 @@ m2 <- glmer(round(ic * 100) ~ temp + time + (1|chamber/location), family = poiss
 anova(m1, m2)
 plot(m1)
 
+## ----Stat_WTC_Lys_IC_D
 
 ########
 # Deep #
@@ -78,3 +81,25 @@ qqnorm(Fml_D, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml_D))
 qqline(residuals.lm(Fml_D))
   # this result is not reliable....
+
+## ----Stat_WTC_Lys_IC_S_Smmry
+# The initial model is:
+Iml_S
+
+Anova(Iml_S)
+
+# The final model is:
+Iml_S
+
+Anova(Iml_S)
+
+## ----Stat_WTC_Lys_IC_D_Smmry
+# The initial model is:
+Iml_D
+
+Anova(Iml_D)
+
+# The final model is:
+Iml_D
+
+Anova(Iml_D)

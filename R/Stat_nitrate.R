@@ -1,3 +1,5 @@
+## ----Stat_WTC_Lys_Nitrate_S
+
 ###########
 # Shallow #
 ###########
@@ -49,6 +51,9 @@ qqnorm(Fml_S, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml_S))
 qqline(residuals.lm(Fml_S))
 
+
+## ----Stat_WTC_Lys_Nitrate_D
+
 ########
 # Deep #
 ########
@@ -97,3 +102,25 @@ qqnorm(Fml, ~ resid(.)|chamber)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
   # not very good...
+
+## ----Stat_WTC_Lys_Nitrate_S_Smmry
+# The initial model is:
+Iml_S
+
+Anova(Iml_S)
+
+# The final model is:
+Iml_S
+
+Anova(Iml_S)
+
+## ----Stat_WTC_Lys_Nitrate_D_Smmry
+# The initial model is:
+Iml_D
+
+Anova(Iml_D)
+
+# The final model is:
+Iml_D
+
+Anova(Iml_D)

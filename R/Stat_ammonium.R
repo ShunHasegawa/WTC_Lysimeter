@@ -1,3 +1,5 @@
+## ----Stat_WTC_Lys_Ammonium_S
+
 ###########
 # Shallow #
 ###########
@@ -46,6 +48,8 @@ qqnorm(Fml_S, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml_S))
 qqline(residuals.lm(Fml_S))
 
+## ----Stat_WTC_Lys_Ammonium_D
+
 ########
 # Deep #
 ########
@@ -93,3 +97,25 @@ qqnorm(Fml_D, ~ resid(.)|id)
 qqnorm(residuals.lm(Fml_D))
 qqline(residuals.lm(Fml_D))
   # not great..
+
+## ----Stat_WTC_Lys_Ammonium_S_Smmry
+# The initial model is:
+Iml_S
+
+Anova(Iml_S)
+
+# The final model is:
+Iml_S
+
+Anova(Iml_S)
+
+## ----Stat_WTC_Lys_Ammonium_D_Smmry
+# The initial model is:
+Iml_D
+
+Anova(Iml_D)
+
+# The final model is:
+Iml_D
+
+Anova(Iml_D)
