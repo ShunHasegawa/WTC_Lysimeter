@@ -287,7 +287,7 @@ MdlSmpl <- function(model){
 #############################################
 
 atcr.cmpr <- function(model, rndmFac){
-  if(rndmFac == "chamber/location"){
+  if(rndmFac == "Chamber/Location"){
     model2 <- update(model,corr=corCompSymm(form=~1|chamber/location)) 
   } else {
     if(rndmFac == "chamber"){
@@ -309,15 +309,52 @@ atcr.cmpr <- function(model, rndmFac){
 ###########################################
 # produce box plots with transformed data #
 ###########################################
-# log OR sqrt OR power(1/3) OR inverse
-bxplts <- function(value, ofst = 0, data){
+# log OR sqrt OR power(1/3) OR inverse OR box-cox
+bxplts <- function(value, ofst = 0, data, ...){
+  data$y <- data[[value]] + ofst #ofst is added to make y >0
+  a <- boxcox(y ~ temp * time, data = data)
   par(mfrow = c(2, 3))
-  y <- data[[value]] + ofst #ofst is added to make y >0
-  boxplot(y ~ temp*time, data)
+  boxplot(y ~ temp*time, data, main = "row")
   boxplot(log(y) ~ temp*time, main = "log", data)
   boxplot(sqrt(y) ~ temp*time, main = "sqrt", data)
   boxplot(y^(1/3) ~ temp*time, main = "power(1/3)", data)
   boxplot(1/y ~ temp*time, main = "inverse", data)
+  BCmax <- a$x[a$y == max(a$y)]
+  texcol <- ifelse(BCmax < 0, "red", "black") 
+  boxplot(y^(BCmax) ~ temp*time, 
+          main = "", sep = "=", 
+          data = data)
+  title(main = paste("Box Cox", round(BCmax, 4)), 
+        col.main = texcol)
+  par(mfrow = c(1,1))
+}
+
+# multiple box-cox power plot for different constant values
+bxcxplts <- function(value, data, sval, fval){
+  data$yval <- data[[value]]
+  ranges <- seq(sval, fval, (fval - sval)/9)
+  
+  # store parameters given from box-cox plot
+  par(mfrow = c(5, 2))
+  BCmax <- vector()
+  for (i in 1:10){
+    data$y <- data$yval + ranges[i]
+    a <- boxcox(y ~ temp * time, data = data)
+    BCmax[i] <- a$x[a$y == max(a$y)]
+  }
+  
+  # plot box plot with poer given from box-box for 
+  # each contstant value
+  par(mfrow = c(5, 2))
+  par(omi = c(0, 0, 0, 0), mai = c(0.4, 0.4, 0.4, 0))
+  sapply(1:10, function(x) {
+    boxplot((yval + ranges[x]) ^ BCmax[x] ~ temp * time, 
+            main = "", data = data)
+    texcol <- ifelse(BCmax[x] < 0, "red", "black") 
+    title(main = paste("constant=", round(ranges[x], 4), 
+                       ", boxcox=", round(BCmax[x], 4)),
+          col.main = texcol)
+  })
   par(mfrow = c(1,1))
 }
 
