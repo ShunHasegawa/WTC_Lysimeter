@@ -53,14 +53,14 @@ anova(m1, m2, m3)
 atcr.cmpr(m3, rndmFac= "id")$models
 # model4 is best
   
-atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+Iml_D <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
 # model simplification
-Anova(atml)
-MdlSmpl(atml)
+Anova(Iml_D)
+MdlSmpl(Iml_D)
 # interaction of temp x time, and temp is removed
 
-Fml <- MdlSmpl(atml)$model.reml
+Fml_D <- MdlSmpl(Iml_D)$model.reml
 
 # the final model is:
 lme(log(ic + .1) ~ time, random = ~1|id, 
@@ -68,15 +68,13 @@ lme(log(ic + .1) ~ time, random = ~1|id,
     subset = depth == "deep", 
     data = lys, na.action = "na.omit")
 
-Anova(Fml)
+Anova(Fml_D)
 
-summary(Fml)
-
-plot(allEffects(Fml))
+summary(Fml_D)
 
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_D)
+qqnorm(Fml_D, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_D))
+qqline(residuals.lm(Fml_D))
   # this result is not reliable....

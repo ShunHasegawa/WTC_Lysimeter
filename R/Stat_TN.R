@@ -2,15 +2,18 @@
 # Shallow #
 ###########
 range(lys$tn[lys$depth == "shallow"], na.rm = TRUE)
-bxplts(value = "tn", ofst = 10, data = subset(lys, depth == "shallow"))
-  # log seems better
+bxcxplts(value = "tn", data = subset(lys, depth == "shallow"), sval = .1, fval = 100)
+# adding constant value of 30 may improve
+
+bxplts(value = "tn", ofst = 30, data = subset(lys, depth == "shallow"))
+  # use box-cox lambda
 
 # different random factor structure
-m1 <- lme(log(tn +10)  ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
+m1 <- lme((tn + 30)^(-0.303)  ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", 
           data = lys, na.action = "na.omit")
-m2 <- lme(log(tn +10) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
+m2 <- lme((tn + 30)^(-0.303) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", 
           data = lys, na.action = "na.omit")
-m3 <- lme(log(tn +10) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
+m3 <- lme((tn + 30)^(-0.303) ~ temp * time, random = ~1|id, subset = depth == "shallow", 
           data = lys, na.action = "na.omit")
 anova(m1, m2, m3)
   # m3 is slightly better
@@ -19,45 +22,41 @@ anova(m1, m2, m3)
 atcr.cmpr(m3, rndmFac= "id")$models
   # model 3 is best
 
-atml <- atcr.cmpr(m3, rndmFac= "id")[[3]]
+Iml_S <- atcr.cmpr(m3, rndmFac= "id")[[3]]
+
+# The initial model is:
+Iml_S$call
+Anova(Iml_S)
 
 # model simpliftnation
-Anova(atml)
+MdlSmpl(Iml_S)
 
-MdlSmpl(atml)
-
-Fml <- MdlSmpl(atml)$model.reml
+Fml_S <- MdlSmpl(Iml_S)$model.reml
 
 # The final model is:
-lme(log(tn + 10) ~ time, random = ~1|id, 
-    subset = depth == "shallow", 
-    correlation=corARMA(q=2),
-    data = lys, na.action = "na.omit")
+Fml_S$call
 
-
-Anova(Fml)
-
-plot(allEffects(Fml))
+Anova(Fml_S)
 
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_S)
+qqnorm(Fml_S, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_S))
+qqline(residuals.lm(Fml_S))
 
 ########
 # Deep #
 ########
 range(lys$tn[lys$depth == "deep"], na.rm = TRUE)
 bxplts(value = "tn", data = subset(lys, depth == "deep"))
-  # power(1/3) looks better
+  # use box-cox lambda
 
 # different random factor structure
-m1 <- lme(tn^(1/3) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
+m1 <- lme(tn^(0.101) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", 
           data = lys, na.action = "na.omit")
-m2 <- lme(tn^(1/3) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
+m2 <- lme(tn^(0.101) ~ temp * time, random = ~1|chamber, subset = depth == "deep", 
           data = lys, na.action = "na.omit")
-m3 <- lme(tn^(1/3) ~ temp * time, random = ~1|id, subset = depth == "deep", 
+m3 <- lme(tn^(0.101) ~ temp * time, random = ~1|id, subset = depth == "deep", 
           data = lys, na.action = "na.omit")
 anova(m1, m2, m3)
   # m1 is slightly better
@@ -66,30 +65,27 @@ anova(m1, m2, m3)
 atcr.cmpr(m1, rndmFac= "chamber/location")$models
   # model4 is best
 
-atml <- atcr.cmpr(m1, rndmFac= "chamber/location")[[4]]
+Iml_D <- atcr.cmpr(m1, rndmFac= "chamber/location")[[4]]
+
+# The initial model is:
+Iml_D$call
+Anova(Iml_D)
 
 # model simpliftnation
-Anova(atml)
-MdlSmpl(atml)
+MdlSmpl(Iml_D)
   # interaction of temp x time, and temp is removed
 
-Fml <- MdlSmpl(atml)$model.reml
+Fml_D <- MdlSmpl(Iml_D)$model.reml
 
-# the final model is:
+# The final model is:
+Fml_D$call
 
-lme(tn^(1/3) ~ time, random = ~1|chamber/location, 
-    ,correlation=corAR1(),
-    subset = depth == "deep", 
-    data = lys, na.action = "na.omit")
+Anova(Fml_D)
 
-Anova(Fml)
-
-summary(Fml)
-
-plot(allEffects(Fml))
+summary(Fml_D)
 
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_D)
+qqnorm(Fml_D, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_D))
+qqline(residuals.lm(Fml_D))

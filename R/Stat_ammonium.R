@@ -4,6 +4,8 @@
 range(lys$nh[lys$depth == "shallow"])
 
 bxplts(value = "nh", ofst= 0.0002, data = subset(lys, depth == "shallow"))
+bxcxplts(value = "nh", data = subset(lys, depth == "shallow"), sval = 0.01, fval = .06)
+# adding constant value of 0.01 may improve
 bxplts(value = "nh", ofst= .01, data = subset(lys, depth == "shallow"))
   # inverse looks better
 
@@ -18,32 +20,31 @@ anova(m1, m2, m3)
 atcr.cmpr(m2, rndmFac= "chamber")$models
   # model3 is best
 
-atml <- atcr.cmpr(m2, rndmFac= "chamber")[[3]]
+Iml_S <- atcr.cmpr(m2, rndmFac= "chamber")[[3]]
+
+# The initial model is:
+Iml_S$call
+Anova(Iml_S)
 
 # model simplification
-Anova(atml)
-MdlSmpl(atml)
+MdlSmpl(Iml_S)
   # interaction of temp x time and temp are removed
 
-Fml <- MdlSmpl(atml)$model.reml
+Fml_S <- MdlSmpl(atml)$model.reml
 
 # the final model is
-lme(1/(nh + .01) ~ time, random = ~1|chamber, 
-    correlation=corARMA(q=2),
-    subset = depth == "shallow", data = lys)
+Fml_S$call
 
-Anova(Fml)
+Anova(Fml_S)
 
-summary(Fml)
-
-plot(allEffects(Fml))
+summary(Fml_S)
 
 # model diagnosis
-plot(Fml)
+plot(Fml_S)
   # wedge-shaped...
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+qqnorm(Fml_S, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_S))
+qqline(residuals.lm(Fml_S))
 
 ########
 # Deep #
@@ -51,6 +52,7 @@ qqline(residuals.lm(Fml))
 range(lys$nh[lys$depth == "deep"])
 
 bxplts(value = "nh", ofst= 0.00271, data = subset(lys, depth == "deep"))
+bxcxplts(value = "nh", data = subset(lys, depth == "deep"), sval = 0.00271, fval = .03)
 bxplts(value = "nh", ofst= .03, data = subset(lys, depth == "deep"))
   # inverse seems slightly better
 
@@ -65,30 +67,29 @@ anova(m1, m2, m3)
 atcr.cmpr(m3, rndmFac= "id")$models
   # model4 looks better
 
-atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+Iml_D <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
-Anova(atml)
+# The initial model is:
+Iml_D$call
+
+Anova(Iml_D)
 
 # model simplification
-MdlSmpl(atml)
+MdlSmpl(Iml_D)
   # interaction of temp x time and temp are removable
 
-Fml <- MdlSmpl(atml)$model.reml
+Fml_D <- MdlSmpl(Iml_D)$model.reml
 
 # The final model is:
-lme(1/(nh + .03) ~ time, random = ~1|id, 
-    correlation=corAR1(),
-    subset = depth == "deep", data = lys)
+Fml_D$call
 
-Anova(Fml)
+Anova(Fml_D)
 
-summary(Fml)
-
-plot(allEffects(Fml))
+summary(Fml_D)
 
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_D)
+qqnorm(Fml_D, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_D))
+qqline(residuals.lm(Fml_D))
   # not great..

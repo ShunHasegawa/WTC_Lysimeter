@@ -3,7 +3,7 @@
 ###########
 range(lys$po[lys$depth == "shallow"])
 bxplts(value = "po", ofst = 0.001, data = subset(lys, depth == "shallow"))
-  #sqrt looks better
+#sqrt looks better
 
 # different random factor structure
 m1 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", data = lys)
@@ -16,32 +16,30 @@ anova(m1, m2, m3)
 atcr.cmpr(m3, rndmFac= "id")$models
   # model4 is best
 
-atml <- atcr.cmpr(m3, rndmFac= "id")[[4]]
+Iml_S <- atcr.cmpr(m3, rndmFac= "id")[[4]]
 
-Anova(atml)
+# The initial model is:
+Iml_S$call
+Anova(Iml_S)
 
 # model simplification
-MdlSmpl(atml)
+MdlSmpl(Iml_S)
   # interaction of temp x time and temp are removable
 
-Fml <- MdlSmpl(atml)$model.reml
+Fml_S <- MdlSmpl(Iml_S)$model.reml
 
-# the final model is:
-lme(sqrt(po + .001) ~ time, random = ~1|id, 
-    correlation=corAR1(),
-    subset = depth == "shallow", data = lys)
+# The final model is:
+Fml_S$call
 
-Anova(Fml)
+Anova(Fml_S)
 
 summary(Fml)
 
-plot(allEffects(Fml))
-
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_S)
+qqnorm(Fml_S, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_S))
+qqline(residuals.lm(Fml_S))
 
 ########
 # Deep #
@@ -61,27 +59,28 @@ anova(m1, m2, m3)
 atcr.cmpr(m1, rndmFac= "chamber/location")$models
   # no need for correlation
 
-Anova(m1)
+Iml_D <- atcr.cmpr(m1, rndmFac= "chamber/location")[[1]]
+
+# The initial model is:
+Iml_D$call
+Anova(Iml_D)
 
 # model simplification
-MdlSmpl(m1)
+MdlSmpl(Iml_D)
   # interaction of temp x time and temp are removable
 
-Fml <- MdlSmpl(m1)$model.reml
+Fml_D <- MdlSmpl(Iml_D)$model.reml
 
 # the final model is:
-lme(sqrt(po) ~ time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
+Fml_D$call
 
-Anova(Fml)
+Anova(Fml_D)
 
-summary(Fml)
-
-plot(allEffects(Fml))
+summary(Fml_D)
 
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
+plot(Fml_D)
+qqnorm(Fml_D, ~ resid(.)|id)
+qqnorm(residuals.lm(Fml_D))
+qqline(residuals.lm(Fml_D))
   # not very great....
-
