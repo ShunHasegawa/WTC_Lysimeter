@@ -61,7 +61,7 @@ read_chunk("R/Stat_IC.R")
 \paragraph{Shallow}
 \noindent
 
-<<Stat_WTC_Lys_IC_S_Smmry, echo=TRUE, results='markup'>>=
+<<Stat_WTC_Lys_IC_S_Smmry, echo=TRUE, results='markup', warning=TRUE>>=
 @
 
 \paragraph{Deep}
