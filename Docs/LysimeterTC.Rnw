@@ -15,7 +15,7 @@
 \begin{center}
 
 <<FigTempTC, echo=FALSE, fig.height=3, fig.width=6>>=
-TrtFg[[4]]
+TrtFg[["tc"]]
 @
 
 \caption{Total C in soil water at temperature treatments}
@@ -98,7 +98,7 @@ read_chunk("R/Stat_tc.R")
 \begin{center}
 
 <<FigChTC, echo=FALSE, fig.height=6, fig.width=6>>=
-ChFg[[3]]
+ChFg[["tc"]]
 @
 
 \caption{Total C in soil water in each chamber}
