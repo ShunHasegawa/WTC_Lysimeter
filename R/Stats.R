@@ -1,3 +1,7 @@
+# df for shallow and deep
+Sdf <- subsetD(lys, depth == "shallow")
+Ddf <- subsetD(lys, depth == "deep")
+
 ###########
 # Nitrate #
 ###########
