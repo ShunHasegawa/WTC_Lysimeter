@@ -177,10 +177,10 @@ PltMean <- function(data, ...){
   data$depth <- factor(data$depth, levels = c("shallow", "deep"), labels = c("Shallow", "Deep")) 
   data$temp <-  factor(data$temp, levels = c("amb", "elev"), labels = c("Ambient", "eTemp"))
     
-  ylabs <- c(expression(NO[3]^"-"-N~(mg~l^-1)),
-             expression(NH[4]^"+"-N~(mg~l^-1)),
-             expression(PO[4]^"3-"-P~(mg~l^-1)),
-             expression(TOC~(mg~l^-1)),
+  ylabs <- c(expression(NO[3]^"-"~(mg~l^-1)),
+             expression(NH[4]^"+"~(mg~l^-1)),
+             expression(PO[4]^"3-"~(mg~l^-1)),
+             expression(DOC~(mg~l^-1)),
              expression(TC~(mg~l^-1)),
              expression(IC~(mg~l^-1)),
              expression(TN~(mg~l^-1)))
@@ -198,9 +198,13 @@ PltMean <- function(data, ...){
     
   p <- ggplot(data, aes_string(x = "Date", y = "Mean", ...))
   
-  p2 <- p + geom_line(size = 1) +
-    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", ...) , width = 5) + 
-    labs(x = "Time", y = ylab)
+  p2 <- p + geom_line(size = 1, position = position_dodge(10)) +
+    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", ...),
+                  width = 5,
+                  position = position_dodge(10)) + 
+    scale_x_date(breaks= date_breaks("2 month"), labels = date_format("%b-%y")) +
+    theme(axis.text.x  = element_text(angle=45, vjust= 1, hjust = 1)) +
+    labs(x = "Month", y = ylab)
   return(p2)
 }
 
