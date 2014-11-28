@@ -200,7 +200,7 @@ PltMean <- function(data, ...){
   
   p2 <- p + geom_line(size = 1, position = position_dodge(10)) +
     geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", ...),
-                  width = 5,
+                  width = 10,
                   position = position_dodge(10)) + 
     scale_x_date(breaks= date_breaks("2 month"), labels = date_format("%b-%y")) +
     theme(axis.text.x  = element_text(angle=45, vjust= 1, hjust = 1)) +
