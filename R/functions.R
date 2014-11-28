@@ -204,7 +204,7 @@ PltMean <- function(data, ...){
                   position = position_dodge(10)) + 
     scale_x_date(breaks= date_breaks("1 month"), 
                  labels = date_format("%b-%y"),
-                 limits = as.Date(c("2013-2-15", "2014-2-15"))) +
+                 limits = as.Date(c("2013-2-1", "2014-2-15"))) +
     theme(axis.text.x  = element_text(angle=45, vjust= 1, hjust = 1)) +
     labs(x = "Month", y = ylab)
   return(p2)
