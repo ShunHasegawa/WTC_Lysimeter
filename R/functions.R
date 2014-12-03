@@ -228,9 +228,8 @@ PltChMean <- function(data){
 # Plot temp trt mean #
 ######################
 PltTempMean <- function(data){
-  p <- PltMean(data, col = "temp", linetype = "depth") +
-    scale_color_manual(values = c("blue", "red"), "Temp trt") +
-    scale_linetype_manual(values = c("solid", "dashed"), "Depth")
+  p <- PltMean(data, col = "temp") +
+    scale_color_manual(values = c("blue", "red"), "Temp trt")
   return(p)
 }
 
