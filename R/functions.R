@@ -319,7 +319,7 @@ bxplts <- function(value, ofst = 0, data, ...){
   data$y <- data[[value]] + ofst #ofst is added to make y >0
   a <- boxcox(y ~ temp * time, data = data)
   par(mfrow = c(2, 3))
-  boxplot(y ~ temp*time, data, main = "row")
+  boxplot(y ~ temp*time, data, main = "raw")
   boxplot(log(y) ~ temp*time, main = "log", data)
   boxplot(sqrt(y) ~ temp*time, main = "sqrt", data)
   boxplot(y^(1/3) ~ temp*time, main = "power(1/3)", data)
