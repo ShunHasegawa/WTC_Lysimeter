@@ -29,10 +29,10 @@ TrtSmmryTbl <- dlply(ChMean, .(variable, depth), function(x) CreateTable(x, fac 
 wb <- createWorkbook()
 
 # worksheet for rowdata and rowdata without outlier
-sheet <- createSheet(wb,sheetName="row_data")
+sheet <- createSheet(wb,sheetName="raw_data")
 addDataFrame(lys, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
 
-sheet <- createSheet(wb,sheetName="row_data_withoutOutlier")
+sheet <- createSheet(wb,sheetName="raw_data_withoutOutlier")
 addDataFrame(LysRmOl, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
 
 # worksheets for chamber summary
