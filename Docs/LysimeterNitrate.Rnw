@@ -5,66 +5,42 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% <<setup, include=FALSE>>=
-% opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
-% opts_knit$set(root.dir=normalizePath('../'))
-% @
-% 
-% <<readFiles, include=FALSE>>=
-% library(car)
-% library(gmodels)
-% library(lme4)
-% library(lubridate)
-% library(MASS)
-% library(nlme)
-% library(packrat)
-% library(plyr)
-% library(reshape)
-% library(xlsx)
-% library(contrast)
-% library(effects)
-% library(ggplot2)
-% library(xtable)
-% library(gridExtra)
-% 
-% source("R//functions.R")
-% load("Output/Data/WTC_lysimeter.RData")
-% source("R/SummaryExlTable.R")
-% source("R//Figs.R")
-% @
+%' <<setup, include=FALSE>>=
+%' opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+%' opts_knit$set(root.dir=normalizePath('../'))
+%' @
+%' 
+%' <<readFiles, include=FALSE>>=
+%' source("R/packages.R")
+%' load("Output/Data/AllObj.RData")
+%' @
 
-
-\subsection{Nitrate}
+\section{Nitrate}
 
 %%% Temp %%%
-\subsubsection{Temp trt}
+\subsection{Temperature treatment}
 
 \begin{figure}[!h]\label{figure:temp_LysimeterNitrate}
-
 \begin{center}
-
-<<FigTempNitrate, echo=FALSE, fig.height=3, fig.width=6>>=
-TrtFg[[1]]
-@
-
+\includegraphics{../Output/Figs/WTC_LysimeterTempTrt_Nitrate.pdf}
 \caption{Nitrate in soil water at temperature treatments}
 \end{center}
 \end{figure}
 
 <<TableTempNitrate, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[["no.shallow"]],
-             caption = "Temp trt mean of nitrate in soil water at a shallow layer", 
+             caption = "Temperature treatment mean of nitrate in soil water at a shallow layer", 
              label = "table:tempLysNitrateS",
              NA.string = c("NA"),
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
 print(xtable(TrtSmmryTbl[["no.deep"]],
-             caption = "Temp trt mean of nitrate in soil water at a deep layer", 
+             caption = "Temperature treatment mean of nitrate in soil water at a deep layer", 
              label = "table:tempLysNitrateD",
              NA.string = c("NA"),
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
@@ -74,11 +50,10 @@ print(xtable(TrtSmmryTbl[["no.deep"]],
 %%% Stats %%%
 %%%%%%%%%%%%%
 \clearpage
-\paragraph{Stats}
+\subsection{Stats}
 \noindent
 
 <<ReadScript_WTC_Lys_Nitrate, echo=FALSE, include=FALSE>>=
-source("R/Stat_nitrate.R")
 read_chunk("R/Stat_nitrate.R")
 @
 
@@ -87,13 +62,13 @@ read_chunk("R/Stat_nitrate.R")
 %% Summary %%
 %%%%%%%%%%%%%
 
-\paragraph{Shallow}
+\subsubsection{Shallow}
 \noindent
 
 <<Stat_WTC_Lys_Nitrate_S_Smmry, echo=TRUE, results='markup'>>=
 @
 
-\paragraph{Deep}
+\subsubsection{Deep}
 \noindent
 
 <<Stat_WTC_Lys_Nitrate_D_Smmry, echo=TRUE, results='markup'>>=
@@ -119,16 +94,11 @@ read_chunk("R/Stat_nitrate.R")
 
 %%% Chamber %%%
 \clearpage
-\subsubsection{Chamber}
+\subsection{Chamber}
 
 \begin{figure}[!h]\label{figure:Ch_LysimeterNitrate}
-
 \begin{center}
-
-<<FigChNitrate, echo=FALSE, fig.height=6, fig.width=6>>=
-ChFg[[1]]
-@
-
+\includegraphics{../Output/Figs/WTC_LysimeterChamber_Nitrate.pdf}
 \caption{Nitrate in soil water in each chamber}
 \end{center}
 \end{figure}
@@ -180,4 +150,3 @@ print(xtable(ChSmmryTbl[["no.deep"]][,c(1, 26:37)],
       table.placement = "H",
       size = "small")
 @
-

@@ -3,6 +3,7 @@
 \usepackage{fullpage}
 \usepackage{pdfpages}
 \usepackage{float}
+\usepackage[hidelinks]{hyperref}
 
 \title{WTC lysiemter results -Summary Stats-}
 \author{Shun Hasegawa}
@@ -16,26 +17,8 @@ opts_knit$set(root.dir=normalizePath('../'))
 @
 
 <<readFiles, include=FALSE>>=
-library(car)
-library(gmodels)
-library(lme4)
-library(lubridate)
-library(MASS)
-library(nlme)
-library(packrat)
-library(plyr)
-library(reshape)
-library(xlsx)
-library(contrast)
-library(effects)
-library(ggplot2)
-library(xtable)
-library(gridExtra)
-
-source("R//functions.R")
-load("Output/Data/WTC_lysimeter.RData")
-source("R/SummaryExlTable.R")
-source("R//Figs.R")
+source("R/packages.R")
+load("Output/Data/AllObj.RData")
 @
 
 \maketitle
@@ -47,22 +30,16 @@ source("R//Figs.R")
 %%%
 %%%
 
-\section{Lysimeter}
-
 %%%%%%%%%%%%%%%
 % summary fig %
 %%%%%%%%%%%%%%%
-\subsection{Summary results}
+\section{Summary results}
 \begin{center}
 \begin{figure}[!ht]\label{figure:WTC_Lysimeter_Allres}
-
-\includegraphics[width=\textwidth]{../Output/Figs/WTC_LysimeterTemp.pdf}
-
+\includegraphics{../Output/Figs/Manuscript/WTC_Lysimeter.pdf}
 \caption{Lysimeter}
-
 \end{figure}
 \end{center}
-
 
 %%%%%%%%%%%
 % Nitrate %
@@ -81,12 +58,11 @@ source("R//Figs.R")
 \clearpage
 \Sexpr{knit_child('LysimeterPhosphate.Rnw')}
 
-
-%%%%%%
-% TC %
-%%%%%%
-\clearpage
-\Sexpr{knit_child('LysimeterTC.Rnw')}
+% %%%%%%
+% % TC %
+% %%%%%%
+% \clearpage
+% \Sexpr{knit_child('LysimeterTC.Rnw')}
 
 %%%%%%%
 % TOC %
@@ -95,17 +71,17 @@ source("R//Figs.R")
 \Sexpr{knit_child('LysimeterTOC.Rnw')}
 
 
-%%%%%%
-% IC %
-%%%%%%
-\clearpage
-\Sexpr{knit_child('LysimeterIC.Rnw')}
-
-%%%%%%
-% TN %
-%%%%%%
-\clearpage
-\Sexpr{knit_child('LysimeterTN.Rnw')}
+% %%%%%%
+% % IC %
+% %%%%%%
+% \clearpage
+% \Sexpr{knit_child('LysimeterIC.Rnw')}
+% 
+% %%%%%%
+% % TN %
+% %%%%%%
+% \clearpage
+% \Sexpr{knit_child('LysimeterTN.Rnw')}
 
 %%%%%%%%%%%%%%%%
 % List of figs %

@@ -5,65 +5,42 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% <<setup, include=FALSE>>=
-% opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
-% opts_knit$set(root.dir=normalizePath('../'))
-% @
-% 
-% <<readFiles, include=FALSE>>=
-% library(car)
-% library(gmodels)
-% library(lme4)
-% library(lubridate)
-% library(MASS)
-% library(nlme)
-% library(packrat)
-% library(plyr)
-% library(reshape)
-% library(xlsx)
-% library(contrast)
-% library(effects)
-% library(ggplot2)
-% library(xtable)
-% library(gridExtra)
-% 
-% source("R//functions.R")
-% load("Output/Data/WTC_lysimeter.RData")
-% source("R/SummaryExlTable.R")
-% source("R//Figs.R")
-% @
+%' <<setup, include=FALSE>>=
+%' opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+%' opts_knit$set(root.dir=normalizePath('../'))
+%' @
+%' <<readFiles, include=FALSE>>=
+%' source("R/packages.R")
+%' load("Output/Data/AllObj.RData")
+%' @
 
-\subsection{Total organic C}
+\section{Dissolved organic C}
 
 %%% Temp %%%
-\subsubsection{Temp trt}
+\subsection{Temperature treatment}
 
 \begin{figure}[!h]\label{figure:temp_LysimeterTOC}
 
 \begin{center}
-
-<<FigTempTOC, echo=FALSE, fig.height=3, fig.width=6>>=
-TrtFg[["toc"]]
-@
-
+\includegraphics{../Output/Figs/WTC_LysimeterTempTrt_TOC.pdf}
 \caption{TOC in soil water at temperature treatments}
 \end{center}
 \end{figure}
 
 <<TableTempTOC, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[["toc.shallow"]],
-             caption = "Temp trt mean of TOC in soil water at a shallow layer", 
+             caption = "Temperature treatment mean of TOC in soil water at a shallow layer", 
              label = "table:tempLysTOCS",
              NA.string = c("NA"),
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
 print(xtable(TrtSmmryTbl[["toc.deep"]],
-             caption = "Temp trt mean of TOC in soil water at a deep layer", 
+             caption = "Temperature treatment mean of TOC in soil water at a deep layer", 
              label = "table:tempLysTOCD",
              NA.string = c("NA"),
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
@@ -73,26 +50,24 @@ print(xtable(TrtSmmryTbl[["toc.deep"]],
 %%% Stats %%%
 %%%%%%%%%%%%%
 \clearpage
-\paragraph{Stats}
+\subsection{Stats}
 \noindent
 
 <<ReadScript_WTC_Lys_TOC, echo=FALSE, include=FALSE>>=
-source("R/Stat_toc.R")
 read_chunk("R/Stat_toc.R")
 @
-
 
 %%%%%%%%%%%%%
 %% Summary %%
 %%%%%%%%%%%%%
 
-\paragraph{Shallow}
+\subsubsection{Shallow}
 \noindent
 
 <<Stat_WTC_Lys_TOC_S_Smmry, echo=TRUE, results='markup'>>=
 @
 
-\paragraph{Deep}
+\subsubsection{Deep}
 \noindent
 
 <<Stat_WTC_Lys_TOC_D_Smmry, echo=TRUE, results='markup'>>=
@@ -118,16 +93,12 @@ read_chunk("R/Stat_toc.R")
 
 %%% Chamber %%%
 \clearpage
-\subsubsection{Chamber}
+\subsection{Chamber}
 
 \begin{figure}[!h]\label{figure:Ch_LysimeterTOC}
 
 \begin{center}
-
-<<FigChTOC, echo=FALSE, fig.height=6, fig.width=6>>=
-ChFg[["toc"]]
-@
-
+\includegraphics{../Output/Figs/WTC_LysimeterChamber_TOC.pdf}
 \caption{Total organic C in soil water in each chamber}
 \end{center}
 \end{figure}

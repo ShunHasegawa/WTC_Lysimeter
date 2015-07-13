@@ -5,37 +5,41 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Phosphate}
+%' <<setup, include=FALSE>>=
+%' opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+%' opts_knit$set(root.dir=normalizePath('../'))
+%' @
+%' <<readFiles, include=FALSE>>=
+%' source("R/packages.R")
+%' load("Output/Data/AllObj.RData")
+%' @
+
+\section{Phosphate}
 
 %%% Temp %%%
-\subsubsection{Temp trt}
+\subsection{Temperature treatment}
 
 \begin{figure}[!h]\label{figure:temp_LysimeterPhosphate}
-
 \begin{center}
-
-<<FigTempPhosphate, echo=FALSE, fig.height=3, fig.width=6>>=
-TrtFg[[3]]
-@
-
+\includegraphics{../Output/Figs/WTC_LysimeterTempTrt_Phosphate.pdf}
 \caption{Phosphate in soil water at temperature treatments}
 \end{center}
 \end{figure}
 
 <<TableTempPhosphate, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[["po.shallow"]],
-             caption = "Temp trt mean of Phosphate in soil water at a shallow layer", 
+             caption = "Temperature treatment mean of Phosphate in soil water at a shallow layer", 
              label = "table:tempLysPhosphateS",
              NA.string = c("NA"),
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
 print(xtable(TrtSmmryTbl[["po.deep"]],
-             caption = "Temp trt mean of Phosphate in soil water at a deep layer", 
+             caption = "Temperature treatment mean of Phosphate in soil water at a deep layer", 
              label = "table:tempLysPhosphateD",
              NA.string = c("NA"),
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
@@ -45,11 +49,10 @@ print(xtable(TrtSmmryTbl[["po.deep"]],
 %%% Stats %%%
 %%%%%%%%%%%%%
 \clearpage
-\paragraph{Stats}
+\subsection{Stats}
 \noindent
 
 <<ReadScript_WTC_Lys_Phosphate, echo=FALSE, include=FALSE>>=
-source("R/Stat_phosphate.R")
 read_chunk("R/Stat_phosphate.R")
 @
 
@@ -58,13 +61,13 @@ read_chunk("R/Stat_phosphate.R")
 %% Summary %%
 %%%%%%%%%%%%%
 
-\paragraph{Shallow}
+\subsubsection{Shallow}
 \noindent
 
 <<Stat_WTC_Lys_Phosphate_S_Smmry, echo=TRUE, results='markup'>>=
 @
 
-\paragraph{Deep}
+\subsubsection{Deep}
 \noindent
 
 <<Stat_WTC_Lys_Phosphate_D_Smmry, echo=TRUE, results='markup'>>=
@@ -91,16 +94,12 @@ read_chunk("R/Stat_phosphate.R")
 
 %%% Chamber %%%
 \clearpage
-\subsubsection{Chamber}
+\subsection{Chamber}
 
 \begin{figure}[!h]\label{figure:Ch_LysimeterPhosphate}
 
 \begin{center}
-
-<<FigChPhosphate, echo=FALSE, fig.height=6, fig.width=6>>=
-ChFg[[3]]
-@
-
+\includegraphics{../Output/Figs/WTC_LysimeterChamber_Phosphate.pdf}
 \caption{Phosphate in soil water in each chamber}
 \end{center}
 \end{figure}
