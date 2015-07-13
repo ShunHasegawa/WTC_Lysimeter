@@ -9,6 +9,11 @@ source("R//functions.R")
 # source("R//ProcessLysimeter.R")
 load("Output/Data/WTC_lysimeter.RData")
 
+# remove negative nh
+lys$nh[lys$nh<0] <- NA
+lys$date <- lys$Date
+lys$Date <- NULL
+
 #################
 # Summary table #
 #################
@@ -23,3 +28,5 @@ source("R//Figs.R")
 # Stats #
 #########
 source("R/Stats.R")
+
+save.image("Output/Data/AllObj.RData")
