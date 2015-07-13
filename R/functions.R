@@ -77,10 +77,10 @@ prcsAQ2 <- function(data){
   
   # turn this into data frame
   a.df <- ldply(a)
-  names(a.df)[c(3:6)] <- c("Date", "chamber", "depth", "location")
-  a.df$Date <- ymd(a.df$Date)
+  names(a.df)[c(3:6)] <- c("date", "chamber", "depth", "location")
+  a.df$date <- ymd(a.df$date)
   res.df <- cbind(a.df, res)
-  res.df <- res.df[c("Date", "chamber", "depth","location", "Result")]
+  res.df <- res.df[c("date", "chamber", "depth","location", "Result")]
   res.df$chamber <- as.numeric(res.df$chamber)
   res.df$location <- as.numeric(res.df$location)
   return(res.df)
@@ -95,7 +95,7 @@ cmbn.fls <- function(file){
   
   # reshape
   names(pr.df)[grep("Result", names(pr.df))] <- "value"
-  pr.cst <- cast(pr.df, Date + chamber + location + depth ~ Test.Name)
+  pr.cst <- cast(pr.df, date + chamber + location + depth ~ Test.Name)
   return(pr.cst)
 }
 
@@ -103,7 +103,7 @@ cmbn.fls <- function(file){
 # Create a summary table #
 ##########################
 CreateTable <- function(dataset, fac){
-  a <- dataset[c("Date", fac, "value")] #extract required columns
+  a <- dataset[c("date", fac, "value")] #extract required columns
   colnames(a) <- c("date","variable","value") #change column names for cast
   means <- cast(a, date~variable, mean, na.rm = TRUE) 
   ses <- cast(a,date~variable,function(x) ci(x,na.rm=TRUE)[4])
@@ -112,6 +112,7 @@ CreateTable <- function(dataset, fac){
   colnames(samples)[2:ncol(samples)] <- paste(colnames(samples)[2:ncol(samples)],"N",sep=".")
   mer <- Reduce(function(...) merge(..., by = "date"), list(means, ses, samples)) #merge datasets
   mer <- mer[,c(1, order(names(mer)[-grep("date|N", names(mer))])+1, grep("N", names(mer)))] #re-order columns
+  if(fac == "temp") mer$tempR <- with(mer, elev/amb - 1)
   mer$date <- as.character(mer$date) # date is turned into character for knitr output 
   return(mer)
 }
@@ -196,7 +197,7 @@ PltMean <- function(data, ...){
     }
   }
     
-  p <- ggplot(data, aes_string(x = "Date", y = "Mean", ...))
+  p <- ggplot(data, aes_string(x = "date", y = "Mean", ...))
   
   p2 <- p + geom_line(size = 1, position = position_dodge(10)) +
     geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", ...),
@@ -316,7 +317,7 @@ atcr.cmpr <- function(model, rndmFac){
 # log OR sqrt OR power(1/3) OR inverse OR box-cox
 bxplts <- function(value, ofst = 0, data, ...){
   data$y <- data[[value]] + ofst #ofst is added to make y >0
-  a <- boxcox(y ~ temp * time, data = data)
+  a <- boxcox(y ~ temp * time, data = data, plotit = FALSE)
   par(mfrow = c(2, 3))
   boxplot(y ~ temp*time, data, main = "raw")
   boxplot(log(y) ~ temp*time, main = "log", data)
@@ -335,6 +336,7 @@ bxplts <- function(value, ofst = 0, data, ...){
 
 # multiple box-cox power plot for different constant values
 bxcxplts <- function(value, data, sval, fval){
+  par.def <- par()
   data$yval <- data[[value]]
   ranges <- seq(sval, fval, (fval - sval)/9)
   
@@ -343,7 +345,7 @@ bxcxplts <- function(value, data, sval, fval){
   BCmax <- vector()
   for (i in 1:10){
     data$y <- data$yval + ranges[i]
-    a <- boxcox(y ~ temp * time, data = data)
+    a <- boxcox(y ~ temp * time, data = data, plotit = FALSE)
     BCmax[i] <- a$x[a$y == max(a$y)]
   }
   
@@ -359,7 +361,7 @@ bxcxplts <- function(value, data, sval, fval){
                        ", boxcox=", round(BCmax[x], 4)),
           col.main = texcol)
   })
-  par(mfrow = c(1,1))
+  par(par.def)
 }
 
 ##############################
@@ -381,3 +383,77 @@ stepLmer <- function(model, red.rndm = FALSE, ddf = "Kenward-Roger", ...){
 # is the same as the default DF given by Anova(model, test.statistic = "F). The
 # default of step gives me a warning message for IEM-NO3 for some reasons (not
 # sure why.. so changed it.)
+
+################################
+# Return star based on P value #
+################################
+FormatPval <- function(Pval) {
+  stars <- ifelse(Pval > .05, "",
+                  ifelse(Pval > .01, "'*'",
+                         ifelse(Pval > .001, "'**'",
+                                c("'***'"))))
+  
+  p <- as.character(ifelse(Pval > .05, round(Pval, 3),
+                           ifelse(Pval < .001, "bold('<0.001')", 
+                                  # shown with bold font. Note that inside of
+                                  # bold needs to be in ''
+                                  paste("bold(", round(Pval, 3), ")", sep = "'"))))
+  return(data.frame(stars, p))
+} 
+
+########################################
+# Create summary stat table from anova #
+########################################
+StatTable <- function(x, variable) { # x is anova result
+  df <- data.frame(predictor = c(row.names(x)),
+                   rbind(FormatPval(x$Pr)))
+  
+  # add a row for column name of the table in the fig 
+  df <- rbind(df, data.frame(predictor = "", 
+                             stars = "italic('P')", 
+                             p = "italic('P')"))
+  
+  result <- merge(df, data.frame(predictor = c("temp", "time", "temp:time")), all = TRUE)
+  
+  # replace NA with ns
+  result <- within(result, {
+    p <- ifelse(is.na(p), "ns", as.character(p)) 
+    # ifelse tries to return factor, so use as.character
+    stars <- ifelse(is.na(stars), "ns", as.character(stars))
+  })
+  
+  # relabel for plotting
+  result$predictor <- factor(result$predictor, 
+                             labels = c("", "Temp", "Time", "Temp~x~Time"), 
+                             levels = c("", "temp", "time", "temp:time"))
+  result$variable <- variable
+  result <- result[order(result$predictor), ]
+  return(result)
+}
+
+############################################
+# Create df to add a stat table to figures #
+############################################
+StatPositionDF <- function(StatRes, variable, ytop, ylength, gap = .1){
+  d <- data.frame(variable, ytop, gap = gap * ylength) 
+  # ytop is y coordinate for the top (i.e. temp) of the table for each fig 
+  # (variable), ylength is the difference of max and min value of the plot (i.e.
+  # max(mean+SE) - min(mean-SE)). 0.1 * ylength is used to determine the gap between each row
+  # of the table
+  
+  predictor <- levels(StatRes$predictor)
+  
+  # create df which contains variable, predictor and y coordinates for the other
+  # predictors (i.e. Time, tempxTime) which is ylength*0.1 (= gap) lower than one above
+  d2 <- ddply(d, .(variable),
+              function(x){
+                data.frame(predictor, 
+                           ldply(1:length(predictor), function(z) x$ytop - z * x$gap))
+              })
+  names(d2)[3] <- "yval"
+  
+  # mege every thing
+  d3 <- merge(d2, StatRes, by = c("variable", "predictor"))
+  d3$temp <- "amb" # temp column is required for ggplot
+  return(d3)
+}
