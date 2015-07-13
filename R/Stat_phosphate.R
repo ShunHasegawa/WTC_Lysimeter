@@ -3,110 +3,71 @@
 ###########
 # Shallow #
 ###########
-range(lys$po[lys$depth == "shallow"])
-bxplts(value = "po", ofst = 0.001, data = subset(lys, depth == "shallow"))
-#sqrt looks better
+range(Sdf$po)
+bxplts(value = "po", ofst = 0.001, data = Sdf)
+# power(1/3) looks better
 
-# different random factor structure
-m1 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", data = lys)
-m2 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", data = lys)
-m3 <- lme(sqrt(po + .001) ~ temp * time, random = ~1|id, subset = depth == "shallow", data = lys)
-anova(m1, m2, m3)
-  # m3 is slightly better
+Iml_S_po <- lmer((po + 0.01)^(1/3) ~ temp * time + (1|chamber), data = Sdf)
+Anova(Iml_S_po)
 
-# autocorrelation
-atcr.cmpr(m3, rndmFac= "id")$models
-  # model4 is best
-
-Iml_S <- atcr.cmpr(m3, rndmFac= "id")[[4]]
-
-# The initial model is:
-Iml_S$call
-Anova(Iml_S)
-
-# model simplification
-MdlSmpl(Iml_S)
-  # interaction of temp x time and temp are removable
-
-Fml_S <- MdlSmpl(Iml_S)$model.reml
-
-# The final model is:
-Fml_S$call
-
-Anova(Fml_S)
-
-summary(Fml_S)
+Fml_S_po <- stepLmer(Iml_S_po)
+Anova(Fml_S_po)
+AnvF_S_po <- Anova(Fml_S_po, test.statistic = "F")
+AnvF_S_po
 
 # model diagnosis
-plot(Fml_S)
-qqnorm(Fml_S, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml_S))
-qqline(residuals.lm(Fml_S))
+plot(Fml_S_po)
+qqnorm(resid(Fml_S_po))
+qqline(resid(Fml_S_po))
 
 ## ----Stat_WTC_Lys_Phosphate_D
 
 ########
 # Deep #
 ########
-range(lys$po[lys$depth == "deep"])
-bxplts(value = "po", data = subset(lys, depth == "deep"))
-  # sqrt looks better
+range(Ddf$po)
+bxplts(value = "po", data = Ddf)
 
-# different random factor structure
-m1 <- lme(sqrt(po) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
-m2 <- lme(sqrt(po) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = lys)
-m3 <- lme(sqrt(po) ~ temp * time, random = ~1|id, subset = depth == "deep", data = lys)
-anova(m1, m2, m3)
-  # m1 is slightly better
+# use log
+Iml_D_po <- lmer(log(po) ~ temp * time + (1|chamber), data = Ddf)
+Anova(Iml_D_po)
 
-# autocorrelation
-atcr.cmpr(m1, rndmFac= "chamber/location")$models
-  # no need for correlation
-
-Iml_D <- atcr.cmpr(m1, rndmFac= "chamber/location")[[1]]
-
-# The initial model is:
-Iml_D$call
-Anova(Iml_D)
-
-# model simplification
-MdlSmpl(Iml_D)
-  # interaction of temp x time and temp are removable
-
-Fml_D <- MdlSmpl(Iml_D)$model.reml
-
-# the final model is:
-Fml_D$call
-
-Anova(Fml_D)
-
-summary(Fml_D)
+Fml_D_po <- stepLmer(Iml_D_po)
+Anova(Fml_D_po)
+AnvF_D_po <- Anova(Fml_D_po, test.statistic = "F")
+AnvF_D_po
 
 # model diagnosis
-plot(Fml_D)
-qqnorm(Fml_D, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml_D))
-qqline(residuals.lm(Fml_D))
-  # not very great....
+plot(Fml_D_po)
+qqnorm(resid(Fml_D_po))
+qqline(resid(Fml_D_po))
 
 ## ----Stat_WTC_Lys_Phosphate_S_Smmry
 # The initial model is:
-Iml_S$call
+Iml_S_po@call
 
-Anova(Iml_S)
+Anova(Iml_S_po)
 
 # The final model is:
-Fml_S$call
+Fml_S_po@call
 
-Anova(Fml_S)
+# Chi
+Anova(Fml_S_po)
+
+# F test
+AnvF_S_po
 
 ## ----Stat_WTC_Lys_Phosphate_D_Smmry
 # The initial model is:
-Iml_D$call
+Iml_D_po@call
 
-Anova(Iml_D)
+Anova(Iml_D_po)
 
 # The final model is:
-Fml_D$call
+Fml_D_po@call
 
-Anova(Fml_D)
+# Chi
+Anova(Fml_D_po)
+
+# F test
+AnvF_D_po

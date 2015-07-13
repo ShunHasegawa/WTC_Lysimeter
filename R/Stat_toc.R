@@ -5,84 +5,74 @@
 ###########
 range(Sdf$toc, na.rm = TRUE)
 
-bxplts(value = "toc", ofst = 1, data = Sdf)
+bxplts(value = "toc", data = Sdf)
 
-# remove lower outlier
-nrow(subset(Sdf, toc == 0))
-  # there's only one 0; remove this
-
-tocRmOl <- subset(Sdf, toc > 0)
-
-bxplts(value = "toc", data = tocRmOl)
-  # use inverse
-
-# The initial model is
-Iml_S <- lmer(1/toc ~ temp * time + (1|chamber) + (1|id), data = tocRmOl)
-Anova(Iml_S)
+# use log
+Iml_S_toc <- lmer(log(toc) ~ temp * time + (1|chamber), data = Sdf)
+Anova(Iml_S_toc)
+Anova(Iml_S_toc, test.statistic = "F")
 
 # The final model is
-Fml_S <- stepLmer(Iml_S)
-Anova(Fml_S)
-AnvF_doc_S <- Anova(Fml_S, test.statistic = "F")
-AnvF_doc_S
-
-summary(Fml_S)
-
-plot(allEffects(Fml_S))
+Fml_S_toc <- stepLmer(Iml_S_toc)
+Anova(Fml_S_toc)
+AnvF_S_toc <- Anova(Fml_S_toc, test.statistic = "F")
+AnvF_S_toc
 
 # model diagnosis
-plot(Fml_S)
-qqnorm(resid(Fml_S))
-qqline(resid(Fml_S))
+plot(Fml_S_toc)
+qqnorm(resid(Fml_S_toc))
+qqline(resid(Fml_S_toc))
 
 ## ----Stat_WTC_Lys_TOC_D
 
 ########
 # Deep #
 ########
-range(Ddf$toc, na.rm = TRUE)
+range(Ddf$toc)
 bxplts(value = "toc", data = Ddf)
   # log looks better
 
 # The initial model is
-Iml_D <- lmer(log(toc) ~ temp * time + (1|chamber) + (1|id), data = Ddf)
-Anova(Iml_D)
+Iml_D_toc <- lmer(log(toc) ~ temp * time + (1|chamber), data = Ddf)
+Anova(Iml_D_toc)
 
 # The final model is
-Fml_D <- stepLmer(Iml_D)
-Anova(Fml_D)
-AnvF_doc_D <- Anova(Fml_D, test.statistic = "F")
-AnvF_doc_D
-
-summary(Fml_D)
-
-plot(allEffects(Fml_D))
+Fml_D_toc <- stepLmer(Iml_D_toc)
+Anova(Fml_D_toc)
+AnvF_D_toc <- Anova(Fml_D_toc, test.statistic = "F")
+AnvF_D_toc
 
 # model diagnosis
-plot(Fml_D)
-qqnorm(resid(Fml_D))
-qqline(resid(Fml_D))
+plot(Fml_D_toc)
+qqnorm(resid(Fml_D_toc))
+qqline(resid(Fml_D_toc))
 
 ## ----Stat_WTC_Lys_TOC_S_Smmry
 # The initial model is:
-Iml_S@call
+Iml_S_toc@call
 
-Anova(Iml_S)
+Anova(Iml_S_toc)
 
 # The final model is:
-Fml_S@call
+Fml_S_toc@call
 
-Anova(Fml_S)
-AnvF_doc_S
+# Chi
+Anova(Fml_S_toc)
+
+# F test
+AnvF_S_toc
 
 ## ----Stat_WTC_Lys_TOC_D_Smmry
 # The initial model is:
-Iml_D@call
+Iml_D_toc@call
 
-Anova(Iml_D)
+Anova(Iml_D_toc)
 
 # The final model is:
-Fml_D@call
+Fml_D_toc@call
 
-Anova(Fml_D)
-AnvF_doc_D
+# Chi
+Anova(Fml_D_toc)
+
+# F test
+AnvF_D_toc

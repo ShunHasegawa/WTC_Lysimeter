@@ -3,54 +3,20 @@
 ###########
 # Shallow #
 ###########
-range(lys$no[lys$depth == "shallow"])
+bxplts(value = "no", data = Sdf)
 
-bxplts(value = "no", data = subsetD(lys, depth == "shallow"))
-bxcxplts(value = "no", data = subsetD(lys, depth == "shallow"), sval = 0, fval = 4.5)
-# adding constatn value of 4.5 may improve
+# use log
+Iml_S_no <- lmer(log(no) ~ temp * time + (1|chamber), data = Sdf)
+Anova(Iml_S_no)
 
-bxplts(value = "no", data = subsetD(lys, depth == "shallow"), ofst= 4.5)
-# use box-cox lambda
-
-
-# different random factor structure
-m1 <- lme((no + 4.5)^(0.0202) ~ temp * time, random = ~1|chamber/location, subset = depth == "shallow", data = lys)
-m2 <- lme((no + 4.5)^(0.0202) ~ temp * time, random = ~1|chamber, subset = depth == "shallow", data = lys)
-m3 <- lme((no + 4.5)^(0.0202) ~ temp * time, random = ~1|id, subset = depth == "shallow", data = lys)
-anova(m1, m2, m3)
-# m3 is slightly better
-
-# autocorrelation
-atcr.cmpr(m3, rndmFac= "id")$models
-# model3 is best
-
-Iml_S <- atcr.cmpr(m3, rndmFac= "id")[[3]]
-
-# The initial model is:
-Iml_S$call
-Anova(Iml_S)
-
-# model simplification
-MdlSmpl(Iml_S)
-# interaction of temp x time and temp are removable
-
-Fml_S <- MdlSmpl(Iml_S)$model.reml
-
-
-
-# the final model is
-Fml_S$call
-
-Anova(Fml_S)
-
-summary(Fml_S)
+Fml_S_no <- stepLmer(Iml_S_no)
+Anova(Fml_S_no)
+AnvF_S_no <- Anova(Fml_S_no, test.statistic = "F")
 
 # model diagnosis
-plot(Fml_S)
-qqnorm(Fml_S, ~ resid(.)|id)
-qqnorm(residuals.lm(Fml_S))
-qqline(residuals.lm(Fml_S))
-
+plot(Fml_S_no)
+qqnorm(resid(Fml_S_no))
+qqline(resid(Fml_S_no))
 
 ## ----Stat_WTC_Lys_Nitrate_D
 
@@ -58,67 +24,48 @@ qqline(residuals.lm(Fml_S))
 # Deep #
 ########
 
-range(lys$no[lys$depth == "deep"])
+bxplts(value = "no", data = Ddf)
 
-bxplts(value = "no", data = subset(lys, depth == "deep"))
-  # log seems slightly better
+# use power(1/3)
+Iml_D_no <- lmer(no^(1/3) ~ temp * time + (1|chamber), data = Ddf)
+Anova(Iml_D_no)
 
-# different random factor structure
-m1 <- lme(log(no) ~ temp * time, random = ~1|chamber/location, subset = depth == "deep", data = lys)
-m2 <- lme(log(no) ~ temp * time, random = ~1|chamber, subset = depth == "deep", data = lys)
-m3 <- lme(log(no) ~ temp * time, random = ~1|id, subset = depth == "deep", data = lys)
-anova(m1, m2, m3)
-  # m1 is better
-
-# autocorrelation
-atcr.cmpr(m1, rndmFac= "chamber/location")$models
-  # model4 is best
-
-Iml_D <- atcr.cmpr(m1, rndmFac= "chamber/location")[[4]]
-
-# The initial model is:
-Iml_D$call
-
-Anova(Iml_D)
-
-# model simplification
-MdlSmpl(Iml_D)
-  # interaction of temp x time and temp are removable
-
-Fml_D <- MdlSmpl(Iml_D)$model.reml
-
-# The final model is
-Fml_D$call
-
-Anova(Fml_D)
-
-summary(Fml_D)
+Fml_D_no <- stepLmer(Iml_D_no)
+Anova(Fml_D_no)
+AnvF_D_no <- Anova(Fml_D_no, test.statistic = "F")
+AnvF_D_no
 
 # model diagnosis
-plot(Fml_D)
-qqnorm(Fml_D, ~ resid(.)|chamber)
-qqnorm(residuals.lm(Fml_D))
-qqline(residuals.lm(Fml_D))
-  # not very good...
+plot(Fml_D_no)
+qqnorm(resid(Fml_D_no))
+qqline(resid(Fml_D_no))
 
 ## ----Stat_WTC_Lys_Nitrate_S_Smmry
 # The initial model is:
-Iml_S$call
+Iml_S_no@call
 
-Anova(Iml_S)
+Anova(Iml_S_no)
 
 # The final model is:
-Fml_S$call
+Fml_S_no@call
 
-Anova(Fml_S)
+# Chi
+Anova(Fml_S_no)
+
+# F test
+AnvF_S_no
 
 ## ----Stat_WTC_Lys_Nitrate_D_Smmry
 # The initial model is:
-Iml_D$call
+Iml_D_no@call
 
-Anova(Iml_D)
+Anova(Iml_D_no)
 
 # The final model is:
-Fml_D$call
+Fml_D_no@call
 
-Anova(Fml_D)
+# Chi
+Anova(Fml_D_no)
+
+# F test
+AnvF_D_no
