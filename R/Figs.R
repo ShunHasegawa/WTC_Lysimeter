@@ -111,14 +111,17 @@ statDF <- StatPositionDF(StatRes = Stat_TempTime,
                          ytop = ylengthDF$ymax * 1.08,
                          ylength = ylengthDF$ylength)
 
+
 # x position for statDF
 varDepDF <- unique(data.frame(statDF[, c("variable", "depth")]))
 xvalDF <- data.frame(varDepDF,
-                     xval = as.Date(c("2013-5-10", "2013-5-10", 
-                                      "2013-6-10", "2013-5-10", 
-                                      "2013-5-10", "2013-5-10",
-                                      "2013-9-10", "2013-9-10")))
+                     xval = as.Date(c("2013-7-15", "2013-11-20", 
+                                      "2013-7-15", "2013-11-20", 
+                                      "2013-7-15", "2013-11-20",
+                                      "2013-11-20", "2013-11-20")))
 statDF <- merge(statDF, xvalDF, by = c("variable", "depth"))
+statDF[statDF$variable == 'NO[3]^"-"' & statDF$depth == "Deep", "yval"] <- 
+  statDF[statDF$variable == 'NO[3]^"-"' & statDF$depth == "Deep", "yval"] - 220
 
 ################
 ## plot theme ##
@@ -141,6 +144,8 @@ science_theme <- theme(panel.border = element_rect(color = "black"),
 p <- ggplot(df, aes(x = date, y = Mean, group = temp))
 
 pl <- p + 
+  geom_vline(xintercept = as.numeric(as.Date("2013-3-18")), 
+             linetype = "dashed", col = "black") +
   geom_line(aes(linetype = temp), position = position_dodge(10)) + 
   geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE), 
                 width = 0, size = .4,
