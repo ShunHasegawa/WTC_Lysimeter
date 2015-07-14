@@ -7,7 +7,10 @@ bxplts(value = "nh", ofst= 0.01, data = Sdf)
   # inverse looks better
 
 # use inverse
-Iml_S_nh <- lmer(1/(nh + 0.01) ~ temp * time + (1|chamber), data = Sdf)
+m1 <- lmer(1/(nh + 0.01) ~ temp * time + (1|chamber), data = Sdf)
+Anova(m1)
+# no interaction so remove time1
+Iml_S_nh <- update(m1, data = Sdf2)
 Anova(Iml_S_nh)
 
 Fml_S_nh <- stepLmer(Iml_S_nh)
@@ -28,7 +31,10 @@ qqline(resid(Fml_S_nh))
 bxplts(value = "nh", data = Ddf)
 
 # use log
-Iml_D_nh <- lmer(log(nh) ~ temp * time + (1|chamber), data = Ddf)
+m1 <- lmer(log(nh) ~ temp * time + (1|chamber), data = Ddf)
+Anova(m1)
+# no interaction
+Iml_D_nh <- update(m1, data = Ddf2)
 Anova(Iml_D_nh)
 
 Fml_D_nh <- stepLmer(Iml_D_nh)

@@ -7,7 +7,10 @@ range(Sdf$po)
 bxplts(value = "po", ofst = 0.001, data = Sdf)
 # power(1/3) looks better
 
-Iml_S_po <- lmer((po + 0.01)^(1/3) ~ temp * time + (1|chamber), data = Sdf)
+m1 <- lmer((po + 0.01)^(1/3) ~ temp * time + (1|chamber), data = Sdf)
+Anova(m1)
+# no interaction so remove time1
+Iml_S_po <- update(m1, data = Sdf2)
 Anova(Iml_S_po)
 
 Fml_S_po <- stepLmer(Iml_S_po)
@@ -29,7 +32,11 @@ range(Ddf$po)
 bxplts(value = "po", data = Ddf)
 
 # use log
-Iml_D_po <- lmer(log(po) ~ temp * time + (1|chamber), data = Ddf)
+m1 <- lmer(log(po) ~ temp * time + (1|chamber), data = Ddf)
+Anova(m1)
+
+# no interaction
+Iml_D_po <- update(m1, data = Ddf2)
 Anova(Iml_D_po)
 
 Fml_D_po <- stepLmer(Iml_D_po)

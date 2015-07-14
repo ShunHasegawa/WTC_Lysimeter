@@ -8,9 +8,13 @@ range(Sdf$toc, na.rm = TRUE)
 bxplts(value = "toc", data = Sdf)
 
 # use log
-Iml_S_toc <- lmer(log(toc) ~ temp * time + (1|chamber), data = Sdf)
+m1 <- lmer(log(toc) ~ temp * time + (1|chamber), data = Sdf)
+Anova(m1)
+Anova(m1, test.statistic = "F")
+
+# no interaction so remove time1
+Iml_S_toc <- update(m1, data = Sdf2)
 Anova(Iml_S_toc)
-Anova(Iml_S_toc, test.statistic = "F")
 
 # The final model is
 Fml_S_toc <- stepLmer(Iml_S_toc)
@@ -33,7 +37,11 @@ bxplts(value = "toc", data = Ddf)
   # log looks better
 
 # The initial model is
-Iml_D_toc <- lmer(log(toc) ~ temp * time + (1|chamber), data = Ddf)
+m1 <- lmer(log(toc) ~ temp * time + (1|chamber), data = Ddf)
+Anova(m1)
+
+# no interaction
+Iml_D_toc <- update(m1, data = Ddf2)
 Anova(Iml_D_toc)
 
 # The final model is

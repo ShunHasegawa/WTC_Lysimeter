@@ -6,7 +6,10 @@
 bxplts(value = "no", data = Sdf)
 
 # use log
-Iml_S_no <- lmer(log(no) ~ temp * time + (1|chamber), data = Sdf)
+m1 <- lmer(log(no) ~ temp * time + (1|chamber), data = Sdf)
+Anova(m1)
+# no interaction so remove time1
+Iml_S_no <- update(m1, data = Sdf2)
 Anova(Iml_S_no)
 
 Fml_S_no <- stepLmer(Iml_S_no)
@@ -27,7 +30,10 @@ qqline(resid(Fml_S_no))
 bxplts(value = "no", data = Ddf)
 
 # use power(1/3)
-Iml_D_no <- lmer(no^(1/3) ~ temp * time + (1|chamber), data = Ddf)
+m1 <- lmer(no^(1/3) ~ temp * time + (1|chamber), data = Ddf)
+Anova(m1)
+# no interaction so remove time1
+Iml_D_no <- update(m1, data = Ddf2)
 Anova(Iml_D_no)
 
 Fml_D_no <- stepLmer(Iml_D_no)

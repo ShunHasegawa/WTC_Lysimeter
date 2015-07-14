@@ -8,6 +8,10 @@ Lys_DF <- ddply(lys, .(date, time, chamber, depth, temp),
 Sdf <- subsetD(Lys_DF, depth == "shallow")
 Ddf <- subsetD(Lys_DF, depth == "deep")
 
+# df without time1 (pre-plant installation)
+Sdf2 <- subsetD(Sdf, time != 1)
+Ddf2 <- subsetD(Ddf, time != 1)
+
 ###########
 # Nitrate #
 ###########
