@@ -64,7 +64,7 @@ read_chunk("R/Stat_toc.R")
 \subsubsection{Shallow}
 \noindent
 
-<<Stat_WTC_Lys_TOC_S_Smmry, echo=TRUE, results='markup'>>=
+<<Stat_WTC_Lys_TOC_S_Smmry, echo=TRUE, results='markup', fig.width = 6.5, fig.height=4>>=
 @
 
 \subsubsection{Deep}
