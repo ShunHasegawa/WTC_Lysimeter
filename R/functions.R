@@ -457,3 +457,32 @@ StatPositionDF <- function(StatRes, variable, ytop, ylength, gap = .1){
   d3$temp <- "amb" # temp column is required for ggplot
   return(d3)
 }
+
+#####################
+# R squared for LMM #
+#####################
+source("R/rsquaredglmm.R")
+
+########################
+# Summary ANCOVA table #
+########################
+AncvSmmryTbl <- function(AncvRes, predictor){
+  ResAncv <- ldply(AncvRes, function(x) {
+    x$predictor <- row.names(x)
+    x <- merge(x[, -2], data.frame('predictor' = predictor), all = TRUE)
+    names(x)[4] <- "Pr"
+    x <- within(x, {
+      Pr <- ifelse(Pr < 0.001, "<0.001", round(Pr, 3))
+      Pr <- ifelse(is.na(Pr), "ns", Pr)
+      F <- round(F, 2)
+      Df.res <- round(Df.res, 0)
+    })
+    return(x)}, 
+    .id = "response")
+  
+  ResAncv_mlt <- melt(ResAncv, id = c("response", "predictor"))
+  ResAncv_cst <- dcast(response + variable ~ predictor, data = ResAncv_mlt)
+  ResAncv_tbl <- ResAncv_cst[, c("response", "variable", predictor)]
+  ResAncv_tbl[is.na(ResAncv_tbl)] <- "-"
+  return(ResAncv_tbl)
+}

@@ -23,6 +23,31 @@ plot(Fml_S_nh)
 qqnorm(resid(Fml_S_nh))
 qqline(resid(Fml_S_nh))
 
+############
+## Ancova ##
+############
+scatterplotMatrix(~ I(1/(nh + 0.01))  + moist + Temp5_Mean, data = Sdf2, diag = "boxplot", 
+                  groups = Sdf2$temp, by.group = TRUE)
+xyplot(1/(nh + 0.01)  ~ moist|chamber, groups = temp, type = c("r", "p"), data = Sdf2)
+xyplot(1/(nh + 0.01)  ~ Temp5_Mean|chamber, groups = temp, type = c("r", "p"), data = Sdf2)
+
+Iml_ancv_nh <- lmer(1/(nh + 0.01) ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Sdf2)
+Anova(Iml_ancv_nh)
+Fml_ancv_nh <- stepLmer(Iml_ancv_nh, alpha.fixed = .1)
+AnvF_ancv_nh <- Anova(Fml_ancv_nh, test.statistic = "F")
+AnvF_ancv_nh
+
+# model diagnosis
+plot(Fml_ancv_nh)
+qqnorm(resid(Fml_ancv_nh))
+qqline(resid(Fml_ancv_nh))
+
+# visualise
+par(mfrow = c(1, 2))
+rtr <- function(x) 1/x - 0.01
+visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE, trans = rtr)
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE, trans = rtr)
+
 ## ----Stat_WTC_Lys_Ammonium_D
 
 ########
@@ -57,6 +82,21 @@ Anova(Fml_S_nh)
 # F test
 AnvF_S_nh
 
+# ANCOVA
+Iml_ancv_nh@call
+Anova(Iml_ancv_nh)
+
+Fml_ancv_nh@call
+Anova(Fml_ancv_nh)
+AnvF_ancv_nh
+
+# visualise
+par(mfrow = c(1, 2))
+rtr <- function(x) 1/x - 0.01
+visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE, trans = rtr)
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE, trans = rtr)
+
+
 ## ----Stat_WTC_Lys_Ammonium_D_Smmry
 # The initial model is:
 Iml_D_nh@call
@@ -71,3 +111,4 @@ Anova(Fml_D_nh)
 
 # F test
 AnvF_D_nh
+

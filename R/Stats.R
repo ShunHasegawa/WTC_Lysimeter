@@ -114,3 +114,15 @@ Stat_TempTime <- within(Stat_TempTime, {
 })
 
 save(Stat_TempTime, file = "Output/Data/WTC_lysimeter_TempxTime_Stats.RData")
+
+############
+## ANCOVA ##
+############
+# change row names
+
+AncvLst <- list('no' = AnvF_ancv_no, 
+                'nh' = AnvF_ancv_nh, 
+                'po' = AnvF_ancv_po,
+                'toc' = AnvF_ancv_toc)
+AncvRes <- AncvSmmryTbl(AncvRes = AncvLst, predictor = row.names(Anova(Iml_ancv_no)))
+write.csv(AncvRes,  file = "Output/Table/SummaryANCOVA.csv", row.names = FALSE)

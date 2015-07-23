@@ -27,6 +27,29 @@ plot(Fml_S_toc)
 qqnorm(resid(Fml_S_toc))
 qqline(resid(Fml_S_toc))
 
+# ANCOVA
+scatterplotMatrix(~ log(toc) + log(moist) + Temp5_Mean, data = Sdf2, diag = "boxplot", 
+                  groups = Sdf2$temp, by.group = TRUE)
+xyplot(log(toc)  ~ log(moist)|chamber, groups = temp, type = c("r", "p"), data = Sdf2)
+xyplot(log(toc)  ~ Temp5_Mean|chamber, groups = temp, type = c("r", "p"), data = Sdf2)
+
+Iml_ancv_toc <- lmer(log(toc) ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Sdf2)
+Anova(Iml_ancv_toc)
+Fml_ancv_toc <- stepLmer(Iml_ancv_toc, alpha.fixed = .1)
+AnvF_ancv_toc <- Anova(Fml_ancv_toc, test.statistic = "F")
+AnvF_ancv_toc
+
+# model diagnosis
+plot(Fml_ancv_toc)
+# higly wedged..
+qqnorm(resid(Fml_ancv_toc))
+qqline(resid(Fml_ancv_toc))
+
+# visualise
+par(mfrow = c(1, 2))
+visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE)
+
 ## ----Stat_WTC_Lys_TOC_D
 
 ########
@@ -69,6 +92,19 @@ Anova(Fml_S_toc)
 
 # F test
 AnvF_S_toc
+
+# ANCOVA
+Iml_ancv_toc@call
+Anova(Iml_ancv_toc)
+
+Fml_ancv_toc@call
+Anova(Fml_ancv_toc)
+AnvF_ancv_toc
+
+# visualise
+par(mfrow = c(1, 2))
+visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE)
 
 ## ----Stat_WTC_Lys_TOC_D_Smmry
 # The initial model is:
