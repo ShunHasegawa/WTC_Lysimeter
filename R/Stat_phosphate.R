@@ -42,8 +42,10 @@ qqline(resid(Fml_ancv_po))
 
 # visualise
 par(mfrow = c(1, 2))
-visreg(Fml_ancv_po, xvar = "moist")
-visreg(Fml_ancv_po, xvar = "Temp5_Mean")
+TransVirsreg(visreg(Fml_ancv_po, xvar = "moist", plot = FALSE), 
+             trans = function(x) x^3 + 0.01)
+TransVirsreg(visreg(Fml_ancv_po, xvar = "Temp5_Mean", plot = FALSE), 
+             trans = function(x) x^3 + 0.01)
 
 ## ----Stat_WTC_Lys_Phosphate_D
 
@@ -96,8 +98,12 @@ AnvF_ancv_po
 
 # visualise
 par(mfrow = c(1, 2))
-visreg(Fml_ancv_po, xvar = "moist")
-visreg(Fml_ancv_po, xvar = "Temp5_Mean")
+TransVirsreg(visreg(Fml_ancv_po, xvar = "moist", plot = FALSE), 
+             trans = function(x) x^3 + 0.01, 
+             point = list(col = Sdf2$temp, cex = 1))
+TransVirsreg(visreg(Fml_ancv_po, xvar = "Temp5_Mean", plot = FALSE), 
+             trans = function(x) x^3 + 0.01, 
+             point = list(col = Sdf2$temp, cex = 1))
 
 ## ----Stat_WTC_Lys_Phosphate_D_Smmry
 # The initial model is:

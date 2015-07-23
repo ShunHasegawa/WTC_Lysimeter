@@ -47,8 +47,15 @@ qqline(resid(Fml_ancv_toc))
 
 # visualise
 par(mfrow = c(1, 2))
-visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
-visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE)
+TransVirsreg(visreg(Fml_ancv_toc, xvar = "moist", by = "temp", plot = FALSE), 
+             overlay = TRUE, trans = exp, 
+             line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1))
+TransVirsreg(visreg(Fml_ancv_toc, xvar = "Temp5_Mean", by = "temp", plot = FALSE), 
+             overlay = TRUE, trans = exp, 
+             line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1))
+
 
 ## ----Stat_WTC_Lys_TOC_D
 
@@ -103,8 +110,14 @@ AnvF_ancv_toc
 
 # visualise
 par(mfrow = c(1, 2))
-visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
-visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE)
+TransVirsreg(visreg(Fml_ancv_toc, xvar = "moist", by = "temp", plot = FALSE), 
+             overlay = TRUE, trans = exp, 
+             line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1))
+TransVirsreg(visreg(Fml_ancv_toc, xvar = "Temp5_Mean", by = "temp", plot = FALSE), 
+             overlay = TRUE, trans = exp, 
+             line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1))
 
 ## ----Stat_WTC_Lys_TOC_D_Smmry
 # The initial model is:
