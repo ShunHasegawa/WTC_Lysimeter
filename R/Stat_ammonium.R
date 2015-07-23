@@ -46,9 +46,12 @@ qqline(resid(Fml_ancv_nh))
 par(mfrow = c(1, 2))
 rtr <- function(x) 1/x - 0.01
 TransVirsreg(visreg(Fml_ancv_nh, xvar = "moist", by = "temp", plot = FALSE), 
-             overlay = TRUE, trans = rtr, line = list(col = c(1, 2)), ylim = c(0, .4))
+             overlay = TRUE, trans = rtr, line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1),ylim = c(0, .4))
 TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", plot = FALSE), 
-             overlay = TRUE, trans = rtr, line = list(col = c(1, 2)), ylim = c(0, .4))
+             overlay = TRUE, trans = rtr, 
+             line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1),ylim = c(0, .4))
 
 ## ----Stat_WTC_Lys_Ammonium_D
 
@@ -97,11 +100,11 @@ par(mfrow = c(1, 2))
 rtr <- function(x) 1/x - 0.01
 TransVirsreg(visreg(Fml_ancv_nh, xvar = "moist", by = "temp", plot = FALSE), 
              overlay = TRUE, trans = rtr, line = list(col = c(1, 2)), 
-             point = list(col = c(1, 2), cex = 1),
-             ylim = c(0, .4))
+             point = list(col = c(1, 2), cex = 1),ylim = c(0, .4))
 TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", plot = FALSE), 
-             overlay = TRUE, trans = rtr, line = list(col = c(1, 2)), ylim = c(0, .4), 
-             point = list(col = c(1, 2), cex = 1))
+             overlay = TRUE, trans = rtr, 
+             line = list(col = c(1, 2)), 
+             point = list(col = c(1, 2), cex = 1),ylim = c(0, .4))
 
 ## ----Stat_WTC_Lys_Ammonium_D_Smmry
 # The initial model is:

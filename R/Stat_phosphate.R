@@ -43,9 +43,11 @@ qqline(resid(Fml_ancv_po))
 # visualise
 par(mfrow = c(1, 2))
 TransVirsreg(visreg(Fml_ancv_po, xvar = "moist", plot = FALSE), 
-             trans = function(x) x^3 + 0.01)
+             trans = function(x) x^3 + 0.01, 
+             point = list(col = Sdf2$temp, cex = 1))
 TransVirsreg(visreg(Fml_ancv_po, xvar = "Temp5_Mean", plot = FALSE), 
-             trans = function(x) x^3 + 0.01)
+             trans = function(x) x^3 + 0.01, 
+             point = list(col = Sdf2$temp, cex = 1))
 
 ## ----Stat_WTC_Lys_Phosphate_D
 

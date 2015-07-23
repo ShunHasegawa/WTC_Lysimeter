@@ -56,7 +56,6 @@ TransVirsreg(visreg(Fml_ancv_toc, xvar = "Temp5_Mean", by = "temp", plot = FALSE
              line = list(col = c(1, 2)), 
              point = list(col = c(1, 2), cex = 1))
 
-
 ## ----Stat_WTC_Lys_TOC_D
 
 ########
