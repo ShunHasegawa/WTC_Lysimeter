@@ -95,7 +95,7 @@ ylengthDF <- ddply(df, .(variable),
                                 ymax = max(x$Mean +x$SE, na.rm = TRUE)))
 # ylength is given as the difference between max and min
 
-## relabel Stat_CO2Time to be consistent with the data df
+## relabel Stat_TempTime to be consistent with the data df
 Stat_TempTime <- within(Stat_TempTime, {
   variable <- factor(variable, 
                      levels = c("no", "nh", "po", "toc"),
@@ -109,7 +109,8 @@ Stat_TempTime <- within(Stat_TempTime, {
 statDF <- StatPositionDF(StatRes = Stat_TempTime, 
                          variable = levels(ylengthDF$variable), 
                          ytop = ylengthDF$ymax * 1.08,
-                         ylength = ylengthDF$ylength)
+                         ylength = ylengthDF$ylength,
+                         gap = 0.11)
 
 
 # x position for statDF
@@ -121,7 +122,7 @@ xvalDF <- data.frame(varDepDF,
                                       "2013-11-20", "2013-11-20")))
 statDF <- merge(statDF, xvalDF, by = c("variable", "depth"))
 statDF[statDF$variable == 'NO[3]^"-"' & statDF$depth == "Deep", "yval"] <- 
-  statDF[statDF$variable == 'NO[3]^"-"' & statDF$depth == "Deep", "yval"] - 220
+  statDF[statDF$variable == 'NO[3]^"-"' & statDF$depth == "Deep", "yval"] - 210
 
 ################
 ## plot theme ##

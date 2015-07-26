@@ -424,7 +424,7 @@ StatTable <- function(x, variable) { # x is anova result
   
   # relabel for plotting
   result$predictor <- factor(result$predictor, 
-                             labels = c("", "Temp", "Time", "Temp~x~Time"), 
+                             labels = c("", "Temp[TRT]", "Time", "Temp[TRT]~x~Time"), 
                              levels = c("", "temp", "time", "temp:time"))
   result$variable <- variable
   result <- result[order(result$predictor), ]
